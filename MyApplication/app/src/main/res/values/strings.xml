@@ -6,11 +6,9 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_my_hunts">MyHuntsActivity</string>
     <string name="my_hunts_title">My Hunts</string>
-
     <string name="select_hunt_text">Select A Hunt</string>
     <string name="create_new_hunts">Create New Hunt</string>
     <string name="share_new_hunts">Share Hunts</string>
-
     <string name="start_hunt_button_text">Start Hunt</string>
     <string name="exit_button_text">Exit</string>
     <string name="title_activity_create_edit_hunts">CreateEditHuntsActivity</string>
@@ -23,6 +21,12 @@
     <string name="record_sound_button_text">Record Sound</string>
     <string name="save_checkpoint_button_text">Save Checkpoint</string>
     <string name="finish_button_text">Finish</string>
-
+    <string name="title_activity_clue_found">ClueFoundActivity</string>
+    <string name="clue_found_title">Clue Found!!</string>
+    <string name="arrived_text">You have arrived! Your next clue:</string>
+    <string name="return_button_text">Return</string>
+    <string name="view_previous_text">View Previous</string>
+    <string name="view_next_text">View Next</string>
+    <string name="page_number_text">0/0</string>
 
 </resources>

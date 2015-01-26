@@ -24,6 +24,10 @@
             android:name=".CreateEditHuntsActivity"
             android:label="@string/title_activity_create_edit_hunts" >
         </activity>
+        <activity
+            android:name=".ClueFoundActivity"
+            android:label="@string/title_activity_clue_found" >
+        </activity>
     </application>
 
 </manifest>
