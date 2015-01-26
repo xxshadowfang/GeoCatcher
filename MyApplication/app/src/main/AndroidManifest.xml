@@ -28,6 +28,10 @@
             android:name=".ClueFoundActivity"
             android:label="@string/title_activity_clue_found" >
         </activity>
+        <activity
+            android:name=".ShareHuntsActivity"
+            android:label="@string/title_activity_share_hunts" >
+        </activity>
     </application>
 
 </manifest>

@@ -9,28 +9,19 @@ import android.view.View;
 import android.widget.Button;
 
 
-public class MyHuntsActivity extends ActionBarActivity {
+public class ShareHuntsActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_hunts);
+        setContentView(R.layout.activity_share_hunts);
 
-        Button startButton = (Button)findViewById(R.id.startHuntButton);
-        startButton.setOnClickListener(new View.OnClickListener() {
+        Button myReturnButton = (Button)findViewById(R.id.returnToMenuFromShareButton);
+        myReturnButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent startHuntIntent = new Intent(getApplicationContext(), YourLocationActivity.class);
-                startActivity(startHuntIntent);
-            }
-        });
-
-        Button exitButton = (Button)findViewById(R.id.exitButton);
-        exitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent exitIntent = new Intent(getApplicationContext(), GeoCatcherMain.class);
-                startActivity(exitIntent);
+                Intent launchMainIntent = new Intent(getApplicationContext(), GeoCatcherMain.class);
+                startActivity(launchMainIntent);
             }
         });
     }
@@ -39,7 +30,7 @@ public class MyHuntsActivity extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_my_hunts, menu);
+        getMenuInflater().inflate(R.menu.menu_share_hunts, menu);
         return true;
     }
 
