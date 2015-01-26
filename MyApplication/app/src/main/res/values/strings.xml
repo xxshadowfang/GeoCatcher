@@ -41,4 +41,6 @@
     <string name="your_location_long">A° B\' C\" Longitude</string>
     <string name="my_clues">My Clues</string>
     <string name="exit">Exit</string>
+    <string name="title_activity_completion">CompletionActivity</string>
+
 </resources>
