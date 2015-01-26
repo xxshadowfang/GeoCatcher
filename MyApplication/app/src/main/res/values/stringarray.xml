@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="sample_hunts">
+        <item>Hunt 1</item>
+        <item>Hunt 2</item>
+        <item>Hunt 3</item>
+    </string-array>
+</resources>

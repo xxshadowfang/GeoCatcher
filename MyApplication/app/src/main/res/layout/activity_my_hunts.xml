@@ -4,9 +4,63 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
+    android:background="@color/bg_color"
     tools:context="barnes.fahsl.geocatcher.MyHuntsActivity">
 
-    <TextView android:text="@string/hello_world" android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="54sp"
+            android:text="@string/my_hunts_title"
+            android:layout_gravity="center"
+            android:id="@+id/myHuntsTitle"
+            android:layout_marginTop="36dp"
+            android:layout_marginBottom="24dp"/>
+
+        <ScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/scrollView"
+            android:background="@color/hunt_menu_bg">
+
+            <RadioGroup
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center">
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Hunt 1"
+                    android:id="@+id/hunt1" />
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Hunt 2"
+                    android:id="@+id/hunt2" />
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Hunt 3"
+                    android:id="@+id/hunt3" />
+
+            </RadioGroup>
+        </ScrollView>
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/huntSelectSpinner"
+            android:layout_gravity="center_horizontal"
+            android:entries="@array/sample_hunts"/>
+
+    </LinearLayout>
 
 </RelativeLayout>

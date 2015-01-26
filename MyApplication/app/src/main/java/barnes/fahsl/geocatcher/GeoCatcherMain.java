@@ -1,9 +1,12 @@
 package barnes.fahsl.geocatcher;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 
 public class GeoCatcherMain extends ActionBarActivity {
@@ -12,6 +15,15 @@ public class GeoCatcherMain extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_geo_catcher_main);
+
+        Button myHuntsButton = (Button)findViewById(R.id.myHuntsButton);
+        myHuntsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent launchMyHuntsIntent = new Intent(getApplicationContext(), MyHuntsActivity.class);
+                startActivity(launchMyHuntsIntent);
+            }
+        });
     }
 
 
