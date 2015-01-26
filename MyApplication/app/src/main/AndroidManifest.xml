@@ -32,6 +32,10 @@
             android:name=".ShareHuntsActivity"
             android:label="@string/title_activity_share_hunts" >
         </activity>
+        <activity
+            android:name=".YourLocationActivity"
+            android:label="@string/title_activity_your_location" >
+        </activity>
     </application>
 
 </manifest>

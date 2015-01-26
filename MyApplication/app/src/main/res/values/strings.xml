@@ -35,5 +35,10 @@
     <string name="receive_a_hunt_message">Receive a Hunt:</string>
     <string name="receive_a_hunt_button_text">Receive</string>
     <string name="return_to_menu_text">Return To Menu</string>
-
+    <string name="title_activity_your_location">YourLocationActivity</string>
+    <string name="your_location_title">Your Location:</string>
+    <string name="your_location_lat">X° Y\' Z\" Latitude</string>
+    <string name="your_location_long">A° B\' C\" Longitude</string>
+    <string name="my_clues">My Clues</string>
+    <string name="exit">Exit</string>
 </resources>

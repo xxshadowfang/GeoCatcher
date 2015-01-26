@@ -1,35 +1,34 @@
 package barnes.fahsl.geocatcher;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
 
-public class GeoCatcherMain extends ActionBarActivity {
+public class YourLocationActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_geo_catcher_main);
-
-        Button myHuntsButton = (Button)findViewById(R.id.myHuntsButton);
-        myHuntsButton.setOnClickListener(new View.OnClickListener() {
+        setContentView(R.layout.activity_your_location);
+        Button myClueButton = (Button)findViewById(R.id.clue_button_your_location);
+        myClueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent launchMyHuntsIntent = new Intent(getApplicationContext(), MyHuntsActivity.class);
-                startActivity(launchMyHuntsIntent);
+                Intent launchMyCluesIntent = new Intent(getApplicationContext(), ClueFoundActivity.class);
+                startActivity(launchMyCluesIntent);
             }
         });
-        Button myCreateButton = (Button)findViewById(R.id.CreateNewHuntsButton);
-        myCreateButton.setOnClickListener(new View.OnClickListener() {
+        Button myExitButton = (Button)findViewById(R.id.exit_your_location);
+        myExitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent launchCreateEditHuntsIntent = new Intent(getApplicationContext(), CreateEditHuntsActivity.class);
-                startActivity(launchCreateEditHuntsIntent);
+                Intent launchExitToMainIntent = new Intent(getApplicationContext(), GeoCatcherMain.class);
+                startActivity(launchExitToMainIntent);
             }
         });
     }
@@ -38,7 +37,7 @@ public class GeoCatcherMain extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_geo_catcher_main, menu);
+        getMenuInflater().inflate(R.menu.menu_your_location, menu);
         return true;
     }
 
