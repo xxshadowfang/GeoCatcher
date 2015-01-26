@@ -1,9 +1,12 @@
 package barnes.fahsl.geocatcher;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 
 public class CompletionActivity extends ActionBarActivity {
@@ -12,6 +15,14 @@ public class CompletionActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_completion);
+        Button myMenuReturnButton = (Button)findViewById(R.id.returnToMenuFromComplete);
+        myMenuReturnButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent launchGoToMenuIntent = new Intent(getApplicationContext(), GeoCatcherMain.class);
+                startActivity(launchGoToMenuIntent);
+            }
+        });
     }
 
 

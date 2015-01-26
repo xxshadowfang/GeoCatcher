@@ -42,5 +42,9 @@
     <string name="my_clues">My Clues</string>
     <string name="exit">Exit</string>
     <string name="title_activity_completion">CompletionActivity</string>
+    <string name="hunt_completion_congrats">   You\'ve \nCompleted \n the Hunt!</string>
+    <string name="time_to_completion">Your Final Time: 00h 00m 00s</string>
+    <string name="clues_found_completion">Total Clues Found: 5/5</string>
+    <string name="return_to_menu_completion">Return To Menu</string>
 
 </resources>
