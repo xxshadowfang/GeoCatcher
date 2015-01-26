@@ -1,9 +1,12 @@
 package barnes.fahsl.geocatcher;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 
 public class ClueFoundActivity extends ActionBarActivity {
@@ -12,6 +15,15 @@ public class ClueFoundActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_clue_found);
+
+        Button returnButton = (Button)findViewById(R.id.returnFromClueFoundButton);
+        returnButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent returnIntent = new Intent(getApplicationContext(), GeoCatcherMain.class);
+                startActivity(returnIntent);
+            }
+        });
     }
 
 

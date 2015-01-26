@@ -32,6 +32,14 @@ public class GeoCatcherMain extends ActionBarActivity {
                 startActivity(launchCreateEditHuntsIntent);
             }
         });
+        Button shareButton = (Button)findViewById(R.id.ShareHuntsButton);
+        shareButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent shareIntent = new Intent(getApplicationContext(), ShareHuntsActivity.class);
+                startActivity(shareIntent);
+            }
+        });
     }
 
 

@@ -1,9 +1,13 @@
 package barnes.fahsl.geocatcher;
 
+import android.content.Intent;
+import android.location.Geocoder;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 
 public class CreateEditHuntsActivity extends ActionBarActivity {
@@ -12,6 +16,15 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_edit_hunts);
+
+        Button returnButton = (Button)findViewById(R.id.finishButton);
+        returnButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent finishIntent = new Intent(getApplicationContext(), GeoCatcherMain.class);
+                startActivity(finishIntent);
+            }
+        });
     }
 
 
