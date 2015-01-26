@@ -53,14 +53,26 @@
 
             </RadioGroup>
         </ScrollView>
-
-        <Spinner
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/huntSelectSpinner"
-            android:layout_gravity="center_horizontal"
-            android:entries="@array/sample_hunts"/>
+            android:orientation="horizontal">
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="@string/start_hunt_button_text"
+            android:id="@+id/startHuntButton"
+            android:layout_gravity="center_horizontal" />
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="@string/exit_button_text"
+            android:id="@+id/exitButton"
+            android:layout_gravity="center_horizontal" />
 
+        </LinearLayout>
     </LinearLayout>
 
 </RelativeLayout>
