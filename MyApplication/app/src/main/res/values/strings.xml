@@ -7,5 +7,7 @@
     <string name="title_activity_my_hunts">MyHuntsActivity</string>
     <string name="my_hunts_title">My Hunts</string>
     <string name="select_hunt_text">Select A Hunt</string>
+    <string name="create_new_hunts">Create New Hunt</string>
+    <string name="share_new_hunts">Share Hunst</string>
 
 </resources>
