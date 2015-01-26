@@ -41,7 +41,7 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/imageView"
+        android:id="@+id/Main_image_view"
         android:src="@drawable/title_image"
         android:layout_marginBottom="22dp"
         android:layout_above="@+id/CreateNewHuntsButton"
@@ -53,7 +53,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/app_name"
         android:textSize="40sp"
-        android:id="@+id/textView"
+        android:id="@+id/Main_title_text"
         android:layout_marginTop="39dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />

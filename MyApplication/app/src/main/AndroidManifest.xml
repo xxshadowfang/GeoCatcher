@@ -28,6 +28,10 @@
             android:name=".ClueFoundActivity"
             android:label="@string/title_activity_clue_found" >
         </activity>
+        <activity
+            android:name=".YourLocationActivity"
+            android:label="@string/title_activity_your_location" >
+        </activity>
     </application>
 
 </manifest>

@@ -28,5 +28,11 @@
     <string name="view_previous_text">View Previous</string>
     <string name="view_next_text">View Next</string>
     <string name="page_number_text">0/0</string>
+    <string name="title_activity_your_location">YourLocationActivity</string>
+    <string name="your_location_title">Your Location:</string>
+    <string name="your_location_lat">X° Y\' Z\" Latitude</string>
+    <string name="your_location_long">A° B\' C\" Longitude</string>
+    <string name="my_clues">My Clues</string>
+    <string name="exit">Exit</string>
 
 </resources>
