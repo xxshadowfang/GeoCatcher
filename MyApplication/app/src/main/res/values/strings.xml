@@ -8,5 +8,15 @@
     <string name="my_hunts_title">My Hunts</string>
     <string name="start_hunt_button_text">Start Hunt</string>
     <string name="exit_button_text">Exit</string>
+    <string name="title_activity_create_edit_hunts">CreateEditHuntsActivity</string>
+    <string name="checkpoints_title">Scavenger Hunt Checkpoints</string>
+    <string name="checkpoints">Checkpoints</string>
+    <string name="add_new_checkpoint_button_text">Add New Checkpoint</string>
+    <string name="checkpoint_hint">Your Clue Text Here</string>
+    <string name="record_location_button_text">Record Location</string>
+    <string name="take_picture_button_text">Take Picture</string>
+    <string name="record_sound_button_text">Record Sound</string>
+    <string name="save_checkpoint_button_text">Save Checkpoint</string>
+    <string name="finish_button_text">Finish</string>
 
 </resources>
