@@ -8,6 +8,12 @@ import java.util.ArrayList;
 public class ScavengerHunt {
     private ArrayList<Checkpoint> checkpoints;
     private boolean completed = false;
+    private String name;
+    private long id;
+
+    public ScavengerHunt(String name) {
+        this.name = name;
+    }
 
     public boolean checkLocation(Location location) {
         return false;
@@ -17,15 +23,23 @@ public class ScavengerHunt {
         return null;
     }
 
-    public Clue getNextClue() {
-        return null;
-    }
-
-    public ArrayList<Clue> getCompletedClues() {
+    public Checkpoint getNextCheckpoint() {
         return null;
     }
 
     public boolean getCompleted() {
         return completed;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public long getId() {
+        return this.id;
+    }
+
+    public String getName() {
+        return name;
     }
 }

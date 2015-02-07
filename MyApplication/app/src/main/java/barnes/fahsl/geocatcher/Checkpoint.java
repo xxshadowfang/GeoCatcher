@@ -24,4 +24,38 @@ public class Checkpoint {
     public boolean hasBeenReached() {
         return reached;
     }
+
+    /**
+     * Created by fahslaj on 2/7/2015.
+     */
+    class Clue {
+        private String text;
+        private String imageURL;
+        private String soundURL;
+        private String videoURL;
+
+        public Clue(String text, String imageURL, String soundURL, String videoURL) {
+            this.text = text;
+            this.imageURL = imageURL;
+            this.soundURL = soundURL;
+            this.videoURL = videoURL;
+        }
+
+        public String getText() {
+            return text;
+        }
+
+        public String getImageURL() {
+            return imageURL;
+        }
+
+        public String getSoundURL() {
+            return soundURL;
+        }
+
+        public String getVideoURL() {
+            return videoURL;
+        }
+    }
 }
+
