@@ -6,11 +6,24 @@ package barnes.fahsl.geocatcher;
 public class Checkpoint {
     private Location location;
     private Clue clue;
-    private boolean reached = false;
+    private boolean reached;
 
-    public Checkpoint(Location location, Clue clue) {
+    public int getCheckNo() {
+        return checkNo;
+    }
+
+
+    public void setCheckNo(int checkNo) {
+        this.checkNo = checkNo;
+    }
+
+    private int checkNo;
+
+    public Checkpoint(Location location, int no) {
+        this.checkNo = no;
         this.location = location;
-        this.clue = clue;
+
+        reached = false;
     }
 
     public Location getLocation() {
@@ -24,6 +37,11 @@ public class Checkpoint {
     public boolean hasBeenReached() {
         return reached;
     }
+
+    public void setClue(String text, String imageURL, String soundURL, String videoURL){
+        this.clue = new Clue(text,imageURL,soundURL,videoURL);
+    }
+
 
     /**
      * Created by fahslaj on 2/7/2015.

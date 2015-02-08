@@ -4,19 +4,19 @@ package barnes.fahsl.geocatcher;
  * Created by fahslaj on 2/7/2015.
  */
 public class Location {
-    private int[] latitude;
-    private int[] longitude;
+    private double latitude;
+    private double longitude;
 
-    public Location(int[] latitude, int[] longitude) {
+    public Location(double latitude, double longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
     }
 
-    public int[] getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
 
-    public int[] getLongitude() {
+    public double getLongitude() {
         return longitude;
     }
 }

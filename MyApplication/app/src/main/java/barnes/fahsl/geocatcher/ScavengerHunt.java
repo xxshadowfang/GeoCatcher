@@ -12,8 +12,9 @@ public class ScavengerHunt {
     private long id;
 
     public ScavengerHunt(String name) {
-        this.name = name;
+        this(name, new ArrayList<Checkpoint>());
     }
+    public ScavengerHunt(String name, ArrayList<Checkpoint> checkpoint){this.name = name; this.checkpoints = checkpoint;}
 
     public boolean checkLocation(Location location) {
         return false;

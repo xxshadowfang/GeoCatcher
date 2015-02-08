@@ -46,5 +46,7 @@
     <string name="time_to_completion">Your Final Time: 00h 00m 00s</string>
     <string name="clues_found_completion">Total Clues Found: 5/5</string>
     <string name="return_to_menu_completion">Return To Menu</string>
+    <string name="checkpoint_strgig">Checkpoint </string>
+    <string name="Name_your_Hunt">Name Your Hunt</string>
 
 </resources>
