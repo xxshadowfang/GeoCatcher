@@ -141,6 +141,8 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
                     return;
                 }
                 Checkpoint newCheckpoint = new Checkpoint(recordedLoc, checkpoints.size() + 1);
+                String text = ((EditText)(CreateEditHuntsActivity.this.findViewById(R.id.hint_text_box))).getText().toString();
+                newCheckpoint.setClue(text, null, null, null);
                 checkpoints.add(newCheckpoint);
                 String[] array = new String[checkpoints.size()+1];
                 for (int i = 1; i < checkpoints.size() + 2; i++)
@@ -154,8 +156,8 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
     }
 
     private void loadCheckpointValues(int position) {
-        Log.d("FAHSL", "Pos: " + position);
-        Log.d("FAHSL", "Size: "+checkpoints.size());
+//        Log.d("FAHSL", "Pos: " + position);
+//        Log.d("FAHSL", "Size: "+checkpoints.size());
         if (position >= checkpoints.size()) {
             ((EditText)findViewById(R.id.hint_text_box)).setText("");
             ((ImageView)findViewById(R.id.clue_image_view)).setImageResource(android.R.color.transparent);
