@@ -91,7 +91,7 @@ public class ScreenSlideFragments extends Fragment {
             };
 
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 0, locationListener);
-
+            //Location.distanceBetween();
 
         }
         else{
