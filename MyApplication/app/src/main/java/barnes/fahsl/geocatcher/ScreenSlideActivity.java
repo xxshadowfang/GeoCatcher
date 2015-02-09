@@ -15,8 +15,9 @@ public class ScreenSlideActivity extends FragmentActivity {
 
     private ArrayList<Checkpoint> checkpoints = new ArrayList<>();
     private ScavengerHunt myHunt;
-    private ArrayList<ScreenSlideFragments> frags;
-    private int checkReveal;
+    public static final String CLUES_COMP = "CLues";
+
+
 
 
 
@@ -32,17 +33,18 @@ public class ScreenSlideActivity extends FragmentActivity {
         Intent intent = getIntent();
         String name =intent.getStringExtra(GeoCatcherMain.KEY_HUNT_NAME);
 
-        mPager = (ViewPager) findViewById(R.id.pager);
-        mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
-        mPager.setAdapter(mPagerAdapter);
+
         HuntDataAdapter hDA = new HuntDataAdapter(this);
         hDA.open();
         myHunt =hDA.getHuntByName(name);
         hDA.close();
         checkpoints = myHunt.getRevealedCheckpoints();
-        checkReveal = checkpoints.size();
-        checkpoints.add(myHunt.getNextCheckpoint());
 
+        checkpoints.add(myHunt.getNextCheckpoint());
+        mPager = (ViewPager) findViewById(R.id.pager);
+        mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
+        mPager.setAdapter(mPagerAdapter);
+        mPagerAdapter.notifyDataSetChanged();
 
 
     }
@@ -51,13 +53,32 @@ public class ScreenSlideActivity extends FragmentActivity {
     public void onBackPressed() {
         if (mPager.getCurrentItem() == 0) {
 
-            //super.onBackPressed();
+            super.onBackPressed();
         } else {
 
             mPager.setCurrentItem(mPager.getCurrentItem() - 1);
         }
     }
+    public void nextCheckpoint(){
+        if(!myHunt.oneRevealedCheckpoint()) {
+            checkpoints = myHunt.getRevealedCheckpoints();
 
+            checkpoints.add(myHunt.getNextCheckpoint());
+            mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
+            mPager.setAdapter(mPagerAdapter);
+            mPagerAdapter.notifyDataSetChanged();
+
+            mPager.setCurrentItem(checkpoints.size() - 1,true);
+
+            mPagerAdapter.notifyDataSetChanged();
+        }
+        else{
+            Intent launchGoToWin = new Intent(getApplicationContext(), CompletionActivity.class);
+            launchGoToWin.putExtra(CLUES_COMP, checkpoints.size());
+            startActivity(launchGoToWin);
+        }
+
+    }
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
         public ScreenSlidePagerAdapter(FragmentManager fm) {
@@ -67,14 +88,14 @@ public class ScreenSlideActivity extends FragmentActivity {
         @Override
         public Fragment getItem(int position) {
 
-//            if(checkReveal==position)
-//              ; //show current hint and location;
+
             return  ScreenSlideFragments.create(checkpoints.get(position));
         }
 
         @Override
         public int getCount() {
             return checkpoints.size();
+
         }
     }
 }

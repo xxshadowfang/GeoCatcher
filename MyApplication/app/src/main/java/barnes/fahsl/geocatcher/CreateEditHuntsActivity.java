@@ -130,11 +130,12 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
         recordLocButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                if (currentLat == 5000 && currentLong == 5000 ) {
-//                    Toast.makeText(getApplicationContext(), getString(R.string.please_wait_for_gps), Toast.LENGTH_SHORT).show();
-//                    return;
-//                }
+                if (currentLat == 5000 && currentLong == 5000 ) {
+                    Toast.makeText(getApplicationContext(), getString(R.string.please_wait_for_gps), Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 recordedLoc = new barnes.fahsl.geocatcher.Location(currentLat, currentLong);
+                Toast.makeText(getApplicationContext(),getString(R.string.successful_location),Toast.LENGTH_SHORT).show();
             }
         });
         Button saveCheckpointButton = (Button)findViewById(R.id.saveCheckpointButton);

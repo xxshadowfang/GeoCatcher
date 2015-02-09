@@ -78,6 +78,7 @@ public class YourLocationActivity extends ActionBarActivity {
         };
 
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 0, locationListener);
+
     }
 
     @Override
