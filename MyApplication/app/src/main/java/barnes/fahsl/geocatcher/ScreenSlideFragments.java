@@ -7,6 +7,7 @@ import android.location.LocationManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.Console;
 
 public class ScreenSlideFragments extends Fragment {
 
@@ -23,6 +26,8 @@ public class ScreenSlideFragments extends Fragment {
     private boolean beenReached;
     private double lat;
     private double longi;
+    private double answerLat;
+    private double answerLong;
     static final String KEY_LAT = "KEY_LAT";
     static final String KEY_LONG = "KEY_LONG";
     public static final String BIT_MAP = "bitmaps";
@@ -42,10 +47,10 @@ public class ScreenSlideFragments extends Fragment {
         boolean isImg = checkpoint.getClue().getImage()!=null;
         args.putBoolean(HAS_BIT_MAP,isImg);
         args.putBoolean(IS_REVEALED,checkpoint.hasBeenReached());
-        if(checkpoint.hasBeenReached()){
+
             args.putDouble(LONG_DONG, checkpoint.getLocation().getLongitude());
             args.putDouble(LAT_STAT,checkpoint.getLocation().getLatitude());
-        }
+
         args.putCharArray(HINT_TEXT, checkpoint.getClue().getText().toCharArray());
 
         if(isImg) {
@@ -67,6 +72,8 @@ public class ScreenSlideFragments extends Fragment {
         beenReached = getArguments().getBoolean(IS_REVEALED);
         if(!beenReached){
 
+            answerLong = getArguments().getDouble(LONG_DONG);
+            answerLat = getArguments().getDouble(LAT_STAT);
             locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
             locationListener = new LocationListener() {
                 @Override
@@ -91,7 +98,7 @@ public class ScreenSlideFragments extends Fragment {
             };
 
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 0, locationListener);
-            //Location.distanceBetween();
+
 
         }
         else{
@@ -114,11 +121,11 @@ public class ScreenSlideFragments extends Fragment {
     }
     @Override public void onDestroy(){
         super.onDestroy();
-        locationManager.removeUpdates(locationListener);
+
 
     }
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(
                 R.layout.fragment_screen_slide_fragments, container, false);
@@ -147,7 +154,12 @@ public class ScreenSlideFragments extends Fragment {
             butt.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    float[] results = new float[3];
+                    Location.distanceBetween(answerLat,answerLong,lat,longi,results);
+                    if(results[0]<20) {
+                        locationManager.removeUpdates(locationListener);
+                        ((ScreenSlideActivity) inflater.getContext()).nextCheckpoint();
+                    }
                 }
             });
             title.setText(getResources().getText(R.string.your_location_title));

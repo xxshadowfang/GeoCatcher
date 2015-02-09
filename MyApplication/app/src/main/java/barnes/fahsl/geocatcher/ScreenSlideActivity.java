@@ -15,8 +15,8 @@ public class ScreenSlideActivity extends FragmentActivity {
 
     private ArrayList<Checkpoint> checkpoints = new ArrayList<>();
     private ScavengerHunt myHunt;
-    private ArrayList<ScreenSlideFragments> frags;
-    private int checkReveal;
+
+
 
 
 
@@ -38,7 +38,7 @@ public class ScreenSlideActivity extends FragmentActivity {
         myHunt =hDA.getHuntByName(name);
         hDA.close();
         checkpoints = myHunt.getRevealedCheckpoints();
-        checkReveal = checkpoints.size();
+
         checkpoints.add(myHunt.getNextCheckpoint());
         mPager = (ViewPager) findViewById(R.id.pager);
         mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
@@ -58,7 +58,16 @@ public class ScreenSlideActivity extends FragmentActivity {
             mPager.setCurrentItem(mPager.getCurrentItem() - 1);
         }
     }
+    public void nextCheckpoint(){
+        myHunt.oneRevealedCheckpoint();
+        checkpoints = myHunt.getRevealedCheckpoints();
 
+        checkpoints.add(myHunt.getNextCheckpoint());
+        mPagerAdapter.notifyDataSetChanged();
+        mPager.setCurrentItem(checkpoints.size()-1);
+        mPagerAdapter.notifyDataSetChanged();
+
+    }
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
         public ScreenSlidePagerAdapter(FragmentManager fm) {
