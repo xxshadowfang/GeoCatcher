@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.location.Geocoder;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -23,7 +25,7 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
     private ArrayList<Checkpoint> checkpoints;
     private ScavengerHunt thisHunt;
     private String name;
-
+    ImageView imgFavorite;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +41,14 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
             isNew = isNew;
 
         EditText input = (EditText)findViewById(R.id.nameHuntEdit);
+        Button takePic = (Button)findViewById(R.id.takePictureButton);
+        imgFavorite = (ImageView)findViewById(R.id.samplepicview);
+        takePic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                open();
+            }
+        });
         Button returnButton = (Button)findViewById(R.id.finishButton);
         returnButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,5 +125,16 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+    public void open(){
+        Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent, 0);
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // TODO Auto-generated method stub
+        super.onActivityResult(requestCode, resultCode, data);
+        Bitmap bp = (Bitmap) data.getExtras().get("data");
+        imgFavorite.setImageBitmap(bp);
     }
 }
