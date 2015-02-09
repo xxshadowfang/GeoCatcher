@@ -32,9 +32,7 @@ public class ScreenSlideActivity extends FragmentActivity {
         Intent intent = getIntent();
         String name =intent.getStringExtra(GeoCatcherMain.KEY_HUNT_NAME);
 
-        mPager = (ViewPager) findViewById(R.id.pager);
-        mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
-        mPager.setAdapter(mPagerAdapter);
+
         HuntDataAdapter hDA = new HuntDataAdapter(this);
         hDA.open();
         myHunt =hDA.getHuntByName(name);
@@ -42,7 +40,10 @@ public class ScreenSlideActivity extends FragmentActivity {
         checkpoints = myHunt.getRevealedCheckpoints();
         checkReveal = checkpoints.size();
         checkpoints.add(myHunt.getNextCheckpoint());
-
+        mPager = (ViewPager) findViewById(R.id.pager);
+        mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
+        mPager.setAdapter(mPagerAdapter);
+        mPagerAdapter.notifyDataSetChanged();
 
 
     }
@@ -51,7 +52,7 @@ public class ScreenSlideActivity extends FragmentActivity {
     public void onBackPressed() {
         if (mPager.getCurrentItem() == 0) {
 
-            //super.onBackPressed();
+            super.onBackPressed();
         } else {
 
             mPager.setCurrentItem(mPager.getCurrentItem() - 1);
@@ -75,6 +76,7 @@ public class ScreenSlideActivity extends FragmentActivity {
         @Override
         public int getCount() {
             return checkpoints.size();
+
         }
     }
 }

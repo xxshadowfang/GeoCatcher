@@ -37,6 +37,7 @@
     <string name="return_to_menu_text">Return To Menu</string>
     <string name="title_activity_your_location">YourLocationActivity</string>
     <string name="your_location_title">Your Location:</string>
+    <string name="your_location_found">Found Location:</string>
     <string name="your_location_lat">XX.XXXXXX° Latitude</string>
     <string name="your_location_long">XX.XXXXXX° Longitude</string>
     <string name="my_clues">My Clues</string>
@@ -53,4 +54,5 @@
     <string name="please_record_location">Please record a location.</string>
     <string name="clue_String">Clue Filler</string>
     <string name="title_activity_screen_slide">ScreenSlideActivity</string>
+    <string name="update_location">Update Your Location</string>
 </resources>
