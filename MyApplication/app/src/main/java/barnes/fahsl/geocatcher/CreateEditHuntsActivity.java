@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -41,6 +42,8 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
     private double currentLat = 5000;
     private double currentLong = 5000;
 
+    private boolean isNew;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,20 +53,21 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
         hda.open();
         Spinner checkpointSpinner = (Spinner)findViewById(R.id.checkpointsSpinner);
 
-        Boolean isNew = getIntent().getBooleanExtra(GeoCatcherMain.KEY_NEW_HUNT, true);
+        isNew = getIntent().getBooleanExtra(GeoCatcherMain.KEY_NEW_HUNT, true);
         String[] array;
         if(isNew) {
             checkpoints = new ArrayList<Checkpoint>();
             array = new String[1];
-            array[0] = "Checkpoint 1";
+            array[0] = "New Checkpoint";
         }
         else {
             name = getIntent().getStringExtra(GeoCatcherMain.KEY_HUNT_NAME);
             thisHunt = hda.getHuntByName(name); // Load previous hunt data
             checkpoints = thisHunt.getCheckpoints();
-            array = new String[checkpoints.size()];
-            for (int i = 1; i < checkpoints.size()+2; i++)
+            array = new String[checkpoints.size()+1];
+            for (int i = 1; i < checkpoints.size()+1; i++)
                 array[i-1] = "Checkpoint "+i;
+            array[checkpoints.size()] = "New Checkpoint";
         }
 
         arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, array);
@@ -140,17 +144,28 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
                     Toast.makeText(getApplicationContext(), getString(R.string.please_record_location), Toast.LENGTH_SHORT).show();
                     return;
                 }
-                Checkpoint newCheckpoint = new Checkpoint(recordedLoc, checkpoints.size() + 1);
-                String text = ((EditText)(CreateEditHuntsActivity.this.findViewById(R.id.hint_text_box))).getText().toString();
-                newCheckpoint.setClue(text, null, null, null);
-                checkpoints.add(newCheckpoint);
-                String[] array = new String[checkpoints.size()+1];
-                for (int i = 1; i < checkpoints.size() + 2; i++)
-                    array[i - 1] = "Checkpoint " + i;
                 Spinner checkpointSpinner = (Spinner) findViewById(R.id.checkpointsSpinner);
-                arrayAdapter = new ArrayAdapter<String>(CreateEditHuntsActivity.this, android.R.layout.simple_spinner_item, array);
-                arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                checkpointSpinner.setAdapter(arrayAdapter);
+                int selectedCheckpointIndex = checkpointSpinner.getSelectedItemPosition();
+                String selectedCheckpointText = ((TextView)checkpointSpinner.getSelectedView()).getText().toString();
+                if (selectedCheckpointText.equals("New Checkpoint")) {
+                    Checkpoint newCheckpoint = new Checkpoint(recordedLoc, checkpoints.size() + 1);
+                    String text = ((EditText) (CreateEditHuntsActivity.this.findViewById(R.id.hint_text_box))).getText().toString();
+                    newCheckpoint.setClue(text, null, null, null);
+                    checkpoints.add(newCheckpoint);
+                    String[] array = new String[checkpoints.size() + 1];
+                    for (int i = 1; i < checkpoints.size() + 1; i++)
+                        array[i - 1] = "Checkpoint " + i;
+                    array[checkpoints.size()] = "New Checkpoint";
+                    arrayAdapter = new ArrayAdapter<String>(CreateEditHuntsActivity.this, android.R.layout.simple_spinner_item, array);
+                    arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    checkpointSpinner.setAdapter(arrayAdapter);
+                    checkpointSpinner.setSelection(checkpoints.size());
+                } else {
+                    Checkpoint editCheckpoint = checkpoints.get(selectedCheckpointIndex);
+                    editCheckpoint.setLocation(recordedLoc);
+                    String text = ((EditText) (CreateEditHuntsActivity.this.findViewById(R.id.hint_text_box))).getText().toString();
+                    editCheckpoint.setClue(text, null, null, null);
+                }
             }
         });
     }
@@ -178,14 +193,22 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
                 LayoutInflater inflater = getActivity().getLayoutInflater();
                 final View view  = inflater.inflate(R.layout.dialog_fragment_layout, null);
                 builder.setView(view);
+                final EditText input = (EditText)view.findViewById(R.id.nameHuntEdit);
+                if (!isNew)
+                    input.setText(thisHunt.getName());
                 builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        final EditText input = (EditText)view.findViewById(R.id.nameHuntEdit);
                         name =input.getText().toString();
-                        ScavengerHunt newHunt = new ScavengerHunt(name, checkpoints);
-                        hda.addHunt(newHunt);
+                        if (isNew) {
+                            ScavengerHunt newHunt = new ScavengerHunt(name, checkpoints);
+                            hda.addHunt(newHunt);
+                        } else {
+                            ScavengerHunt editedHunt = new ScavengerHunt(name, checkpoints);
+                            hda.deleteHunt(thisHunt);
+                            hda.addHunt(editedHunt);
+                        }
+
                         Intent finishIntent = new Intent(getApplicationContext(), GeoCatcherMain.class);
                         Toast.makeText(getApplicationContext(), "Successfully created hunt: "+name, Toast.LENGTH_SHORT).show();
                         startActivity(finishIntent);

@@ -49,6 +49,14 @@
             android:text="@string/start_hunt_button_text"
             android:id="@+id/startHuntButton"
             android:layout_gravity="center_horizontal" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="@string/edit_hunt"
+            android:id="@+id/edit_hunt_button"
+            android:layout_gravity="center_horizontal" />
         <Button
             android:layout_width="0dp"
             android:layout_weight="1"

@@ -65,7 +65,6 @@ public class HuntDataAdapter {
         return names;
     }
 
-    // return the new ID
     public void addHunt(ScavengerHunt hunt) {
         for (Checkpoint p : hunt.getCheckpoints()) {
             ContentValues row = getContentValuesFromCheckpoint(p, hunt.getName());
