@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 public class ScreenSlideActivity extends FragmentActivity {
 
-    private ArrayList<Checkpoint> checkpoints;
+    private ArrayList<Checkpoint> checkpoints = new ArrayList<>();
     private ScavengerHunt myHunt;
     private ArrayList<ScreenSlideFragments> frags;
     private int checkReveal;
@@ -74,7 +74,7 @@ public class ScreenSlideActivity extends FragmentActivity {
 
         @Override
         public int getCount() {
-            return frags.size();
+            return checkpoints.size();
         }
     }
 }

@@ -81,7 +81,7 @@ public class HuntDataAdapter {
     }
 
     public ScavengerHunt getHuntByName(String name) {
-        Cursor cursor = mDatabase.query(CHECKPOINT_CLUES_TABLE_NAME, null, KEY_HUNT_NAME+" = "+name, null, null, null, KEY_CC_NO+" ASC");
+        Cursor cursor = mDatabase.query(CHECKPOINT_CLUES_TABLE_NAME, null, KEY_HUNT_NAME+" = '"+name+"'", null, null, null, KEY_CC_NO+" ASC");
         ArrayList<Checkpoint> checkpoints = new ArrayList<Checkpoint>();
         if (cursor == null || !cursor.moveToFirst()) {
             return null;
