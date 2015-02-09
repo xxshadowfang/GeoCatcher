@@ -36,8 +36,12 @@ public class ScavengerHunt {
         }
         return reachedPoints;
     }
-    public void oneRevealedCheckpoint(){
-        getNextCheckpoint().setReached(true);
+    public boolean oneRevealedCheckpoint(){
+        if(!completed) {
+            getNextCheckpoint().setReached(true);
+            completed = checkpoints.get(checkpoints.size() - 1).hasBeenReached();
+        }
+        return completed;
     }
     public Checkpoint getNextCheckpoint() {
 

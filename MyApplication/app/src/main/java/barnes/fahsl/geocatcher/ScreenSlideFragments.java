@@ -112,7 +112,7 @@ public class ScreenSlideFragments extends Fragment {
     private void handleNewLocation(android.location.Location location) {
         lat = location.getLatitude();
         longi = location.getLongitude();
-        Toast.makeText(this.getActivity(), "Lat: " + this.lat + " Long: " + this.longi, Toast.LENGTH_SHORT).show();
+
 
         latView.setText(String.format("%.8g", lat)+"° Latitude");
         longView.setText(String.format("%.8g", longi)+"° Longitude");
@@ -159,6 +159,7 @@ public class ScreenSlideFragments extends Fragment {
                     if(results[0]<20) {
                         locationManager.removeUpdates(locationListener);
                         ((ScreenSlideActivity) inflater.getContext()).nextCheckpoint();
+
                     }
                 }
             });

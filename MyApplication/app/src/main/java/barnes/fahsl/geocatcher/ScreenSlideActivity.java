@@ -15,6 +15,7 @@ public class ScreenSlideActivity extends FragmentActivity {
 
     private ArrayList<Checkpoint> checkpoints = new ArrayList<>();
     private ScavengerHunt myHunt;
+    public static final String CLUES_COMP = "CLues";
 
 
 
@@ -59,13 +60,23 @@ public class ScreenSlideActivity extends FragmentActivity {
         }
     }
     public void nextCheckpoint(){
-        myHunt.oneRevealedCheckpoint();
-        checkpoints = myHunt.getRevealedCheckpoints();
+        if(!myHunt.oneRevealedCheckpoint()) {
+            checkpoints = myHunt.getRevealedCheckpoints();
 
-        checkpoints.add(myHunt.getNextCheckpoint());
-        mPagerAdapter.notifyDataSetChanged();
-        mPager.setCurrentItem(checkpoints.size()-1);
-        mPagerAdapter.notifyDataSetChanged();
+            checkpoints.add(myHunt.getNextCheckpoint());
+            mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
+            mPager.setAdapter(mPagerAdapter);
+            mPagerAdapter.notifyDataSetChanged();
+
+            mPager.setCurrentItem(checkpoints.size() - 1,true);
+
+            mPagerAdapter.notifyDataSetChanged();
+        }
+        else{
+            Intent launchGoToWin = new Intent(getApplicationContext(), CompletionActivity.class);
+            launchGoToWin.putExtra(CLUES_COMP, checkpoints.size());
+            startActivity(launchGoToWin);
+        }
 
     }
 
