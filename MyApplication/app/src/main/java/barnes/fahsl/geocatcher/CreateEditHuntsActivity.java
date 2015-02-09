@@ -3,44 +3,111 @@ package barnes.fahsl.geocatcher;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.location.*;
+import android.location.Location;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
 
 public class CreateEditHuntsActivity extends ActionBarActivity {
+
+    private ArrayAdapter<String> arrayAdapter;
+    private HuntDataAdapter hda;
+
     private ArrayList<Checkpoint> checkpoints;
     private ScavengerHunt thisHunt;
     private String name;
     ImageView imgFavorite;
+
+    private barnes.fahsl.geocatcher.Location recordedLoc;
+    private double currentLat = 5000;
+    private double currentLong = 5000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_edit_hunts);
 
-        Boolean isNew = true;
+        hda = new HuntDataAdapter(this);
+        hda.open();
+        Spinner checkpointSpinner = (Spinner)findViewById(R.id.checkpointsSpinner);
+
+        Boolean isNew = getIntent().getBooleanExtra(GeoCatcherMain.KEY_NEW_HUNT, true);
+        String[] array;
         if(isNew) {
             checkpoints = new ArrayList<Checkpoint>();
+            array = new String[1];
+            array[0] = "Checkpoint 1";
         }
-        else
-            ; // Load previous hunt data
+        else {
+            name = getIntent().getStringExtra(GeoCatcherMain.KEY_HUNT_NAME);
+            thisHunt = hda.getHuntByName(name); // Load previous hunt data
+            checkpoints = thisHunt.getCheckpoints();
+            array = new String[checkpoints.size()];
+            for (int i = 1; i < checkpoints.size()+2; i++)
+                array[i-1] = "Checkpoint "+i;
+        }
 
-        EditText input = (EditText)findViewById(R.id.nameHuntEdit);
+        arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, array);
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        checkpointSpinner.setAdapter(arrayAdapter);
+        checkpointSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                loadCheckpointValues(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        LocationListener locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                currentLat = location.getLatitude();
+                currentLong = location.getLongitude();
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+
+            }
+        };
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 0, locationListener);
+
         Button takePic = (Button)findViewById(R.id.takePictureButton);
-        imgFavorite = (ImageView)findViewById(R.id.samplepicview);
+        imgFavorite = (ImageView)findViewById(R.id.clue_image_view);
         takePic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -54,6 +121,51 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
                 showFinish();
             }
         });
+        Button recordLocButton = (Button)findViewById(R.id.recordLocationButton);
+        recordLocButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                if (currentLat == 5000 && currentLong == 5000 ) {
+//                    Toast.makeText(getApplicationContext(), getString(R.string.please_wait_for_gps), Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+                recordedLoc = new barnes.fahsl.geocatcher.Location(currentLat, currentLong);
+            }
+        });
+        Button saveCheckpointButton = (Button)findViewById(R.id.saveCheckpointButton);
+        saveCheckpointButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (recordedLoc == null) {
+                    Toast.makeText(getApplicationContext(), getString(R.string.please_record_location), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                Checkpoint newCheckpoint = new Checkpoint(recordedLoc, checkpoints.size() + 1);
+                checkpoints.add(newCheckpoint);
+                String[] array = new String[checkpoints.size()+1];
+                for (int i = 1; i < checkpoints.size() + 2; i++)
+                    array[i - 1] = "Checkpoint " + i;
+                Spinner checkpointSpinner = (Spinner) findViewById(R.id.checkpointsSpinner);
+                arrayAdapter = new ArrayAdapter<String>(CreateEditHuntsActivity.this, android.R.layout.simple_spinner_item, array);
+                arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                checkpointSpinner.setAdapter(arrayAdapter);
+            }
+        });
+    }
+
+    private void loadCheckpointValues(int position) {
+        Log.d("FAHSL", "Pos: " + position);
+        Log.d("FAHSL", "Size: "+checkpoints.size());
+        if (position >= checkpoints.size()) {
+            ((EditText)findViewById(R.id.hint_text_box)).setText("");
+            ((ImageView)findViewById(R.id.clue_image_view)).setImageResource(android.R.color.transparent);
+            recordedLoc = null;
+            return;
+        }
+        Checkpoint currentCheckpoint = checkpoints.get(position);
+        ((EditText)findViewById(R.id.hint_text_box)).setText(currentCheckpoint.getClue().getText());
+        //((ImageView)findViewById(R.id.clue_image_view)).setImageBitmap(currentCheckpoint.getClue().getImage());
+        recordedLoc = currentCheckpoint.getLocation();
     }
 
     private void showFinish() {
@@ -64,14 +176,14 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
                 LayoutInflater inflater = getActivity().getLayoutInflater();
                 final View view  = inflater.inflate(R.layout.dialog_fragment_layout, null);
                 builder.setView(view);
-                final EditText input = (EditText)findViewById(R.id.nameHuntEdit);
                 builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         final EditText input = (EditText)view.findViewById(R.id.nameHuntEdit);
                         name =input.getText().toString();
-                        //finish();
+                        ScavengerHunt newHunt = new ScavengerHunt(name, checkpoints);
+                        hda.addHunt(newHunt);
                         Intent finishIntent = new Intent(getApplicationContext(), GeoCatcherMain.class);
                         Toast.makeText(getApplicationContext(), "Successfully created hunt: "+name, Toast.LENGTH_SHORT).show();
                         startActivity(finishIntent);
@@ -83,7 +195,6 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-
                     }
                 });
 
@@ -93,6 +204,11 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
         df.show(getFragmentManager(), "exit");
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        hda.close();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

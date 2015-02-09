@@ -7,6 +7,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Toast;
+
+import java.util.ArrayList;
 
 
 public class MyHuntsActivity extends ActionBarActivity {
@@ -15,6 +20,19 @@ public class MyHuntsActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_hunts);
+
+        HuntDataAdapter hda = new HuntDataAdapter(this);
+        hda.open();
+        ArrayList <String> names = hda.getAllHuntNames();
+        Toast.makeText(this, "Null? "+(names == null), Toast.LENGTH_SHORT).show();
+
+        RadioGroup myGroup = (RadioGroup)findViewById(R.id.all_hunts_radio_group);
+        RadioButton button;
+        for (int i = 0; i < names.size(); i++) {
+            button = new RadioButton(this);
+            button.setText(names.get(i));
+            myGroup.addView(button);
+        }
 
         Button startButton = (Button)findViewById(R.id.startHuntButton);
         startButton.setOnClickListener(new View.OnClickListener() {
@@ -33,8 +51,13 @@ public class MyHuntsActivity extends ActionBarActivity {
                 startActivity(exitIntent);
             }
         });
+        hda.close();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -14,7 +14,7 @@
     <string name="title_activity_create_edit_hunts">CreateEditHuntsActivity</string>
     <string name="checkpoints_title">Scavenger Hunt Checkpoints</string>
     <string name="checkpoints">Checkpoints</string>
-    <string name="add_new_checkpoint_button_text">Add New Checkpoint</string>
+    <string name="add_new_checkpoint_button_text">Add This Checkpoint</string>
     <string name="checkpoint_hint">Your Clue Text Here</string>
     <string name="record_location_button_text">Record Location</string>
     <string name="take_picture_button_text">Take Picture</string>
@@ -49,5 +49,7 @@
     <string name="checkpoint_strgig">Checkpoint </string>
     <string name="Name_your_Hunt">Name Your Hunt</string>
     <string name="hunt_name">Hunt Name</string>
+    <string name="please_wait_for_gps">Please try again in a few seconds.</string>
+    <string name="please_record_location">Please record a location.</string>
 
 </resources>

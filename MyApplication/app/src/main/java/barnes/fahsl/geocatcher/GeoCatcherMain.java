@@ -11,6 +11,9 @@ import android.widget.Button;
 
 public class GeoCatcherMain extends ActionBarActivity {
 
+    public static final String KEY_NEW_HUNT = "KEY_NEW_HUNT";
+    public static final String KEY_HUNT_NAME = "KEY_HUNT_NAME";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +32,7 @@ public class GeoCatcherMain extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 Intent launchCreateEditHuntsIntent = new Intent(getApplicationContext(), CreateEditHuntsActivity.class);
+                launchCreateEditHuntsIntent.putExtra(KEY_NEW_HUNT, true);
                 startActivity(launchCreateEditHuntsIntent);
             }
         });

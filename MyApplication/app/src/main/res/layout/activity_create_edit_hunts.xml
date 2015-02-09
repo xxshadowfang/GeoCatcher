@@ -20,48 +20,33 @@
         android:layout_marginTop="36dp"
         android:layout_marginBottom="24dp" />
 
-    <LinearLayout
+    <Spinner
+        android:id="@+id/checkpointsSpinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/linearLayout"
-        android:layout_gravity="center"
-        android:orientation="horizontal">
+        android:prompt="@string/checkpoints"
+        android:entries="@array/sample_checkpoints"
+        android:layout_marginRight="24dp">
 
-        <Spinner
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:prompt="@string/checkpoints"
-            android:entries="@array/sample_checkpoints"
-            android:layout_marginRight="24dp"
-            android:layout_weight="1">
+    </Spinner>
 
-        </Spinner>
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/add_new_checkpoint_button_text"
-            android:id="@+id/addNewCheckpointButton"
-            android:layout_weight="1"
-            android:layout_gravity="right" />
-
-    </LinearLayout>
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
 
-        android:inputType="textMultiLine"
-        android:ems="10"
-        android:id="@+id/hint_text_box"
-        android:hint="@string/checkpoint_hint"
-        android:layout_gravity="center_horizontal" />
+            android:inputType="textMultiLine"
+            android:ems="10"
+            android:id="@+id/hint_text_box"
+            android:hint="@string/checkpoint_hint"
+            android:layout_gravity="center_horizontal" />
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id = "@+id/samplepicview"/>
+            android:id = "@+id/clue_image_view"/>
     </LinearLayout>
     <Button
         android:layout_width="wrap_content"
