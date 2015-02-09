@@ -68,8 +68,7 @@ public class ScreenSlideActivity extends FragmentActivity {
         @Override
         public Fragment getItem(int position) {
 
-//            if(checkReveal==position)
-//              ; //show current hint and location;
+
             return  ScreenSlideFragments.create(checkpoints.get(position));
         }
 

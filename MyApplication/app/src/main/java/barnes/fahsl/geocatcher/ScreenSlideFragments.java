@@ -33,6 +33,8 @@ public class ScreenSlideFragments extends Fragment {
     public static final String LONG_DONG = "longitude";
     private TextView latView;
     private TextView longView;
+    private LocationManager locationManager;
+    private LocationListener locationListener;
     //public static final String HAS_HINT_TEXT = "HASHinttext";
     public static ScreenSlideFragments create(Checkpoint checkpoint) {
         ScreenSlideFragments fragment = new ScreenSlideFragments();
@@ -65,8 +67,8 @@ public class ScreenSlideFragments extends Fragment {
         beenReached = getArguments().getBoolean(IS_REVEALED);
         if(!beenReached){
 
-            LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-            LocationListener locationListener = new LocationListener() {
+            locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+            locationListener = new LocationListener() {
                 @Override
                 public void onLocationChanged(android.location.Location location) {
                     handleNewLocation(location);
@@ -89,6 +91,8 @@ public class ScreenSlideFragments extends Fragment {
             };
 
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 0, locationListener);
+
+
         }
         else{
             longi = getArguments().getDouble(LONG_DONG);
@@ -107,6 +111,11 @@ public class ScreenSlideFragments extends Fragment {
         longView.setText(String.format("%.8g", longi)+"° Longitude");
     }
     public ScreenSlideFragments() {
+    }
+    @Override public void onDestroy(){
+        super.onDestroy();
+        locationManager.removeUpdates(locationListener);
+
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -135,6 +144,12 @@ public class ScreenSlideFragments extends Fragment {
             TextView title  = (TextView)rootView.findViewById(R.id.locationTextViewFrag);
 
             Button butt = (Button)rootView.findViewById(R.id.updatelocationButton);
+            butt.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
             title.setText(getResources().getText(R.string.your_location_title));
 
 
