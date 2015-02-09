@@ -16,6 +16,9 @@ import android.util.Log;
  */
 public class HuntDataAdapter {
 
+    private static ArrayList<ScavengerHunt> allHunts = new ArrayList<ScavengerHunt>();
+    private static ArrayList<String> huntNames = new ArrayList<String>();
+
     // Becomes the filename of the database
     private static final String DATABASE_NAME = "hunts.db";
     // table name

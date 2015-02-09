@@ -6,7 +6,6 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.location.Geocoder;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -26,19 +25,18 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
     private ScavengerHunt thisHunt;
     private String name;
     ImageView imgFavorite;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_edit_hunts);
 
-
         Boolean isNew = true;
         if(isNew) {
             checkpoints = new ArrayList<Checkpoint>();
-
         }
         else
-            isNew = isNew;
+            ; // Load previous hunt data
 
         EditText input = (EditText)findViewById(R.id.nameHuntEdit);
         Button takePic = (Button)findViewById(R.id.takePictureButton);
@@ -46,32 +44,23 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
         takePic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                open();
+                openCamera();
             }
         });
         Button returnButton = (Button)findViewById(R.id.finishButton);
         returnButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 showFinish();
-
             }
         });
     }
 
     private void showFinish() {
-
         DialogFragment df = new DialogFragment(){
-
             @Override
             public Dialog onCreateDialog(Bundle savedInstanceState){
-
                 AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
-                //set options
-
-
-
                 LayoutInflater inflater = getActivity().getLayoutInflater();
                 final View view  = inflater.inflate(R.layout.dialog_fragment_layout, null);
                 builder.setView(view);
@@ -81,10 +70,10 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         final EditText input = (EditText)view.findViewById(R.id.nameHuntEdit);
-                         name =input.getText().toString();
-
-                        finish();
+                        name =input.getText().toString();
+                        //finish();
                         Intent finishIntent = new Intent(getApplicationContext(), GeoCatcherMain.class);
+                        Toast.makeText(getApplicationContext(), "Successfully created hunt: "+name, Toast.LENGTH_SHORT).show();
                         startActivity(finishIntent);
                     }
                 });
@@ -126,7 +115,7 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
-    public void open(){
+    public void openCamera(){
         Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(intent, 0);
     }
