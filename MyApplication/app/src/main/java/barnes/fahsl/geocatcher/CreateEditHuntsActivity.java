@@ -185,7 +185,7 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
         }
         Checkpoint currentCheckpoint = checkpoints.get(position);
         ((EditText)findViewById(R.id.hint_text_box)).setText(currentCheckpoint.getClue().getText());
-        //((ImageView)findViewById(R.id.clue_image_view)).setImageBitmap(currentCheckpoint.getClue().getImage());
+        ((ImageView)findViewById(R.id.clue_image_view)).setImageBitmap(currentCheckpoint.getClue().getImage());
         recordedLoc = currentCheckpoint.getLocation();
     }
 
