@@ -41,6 +41,7 @@ public class YourLocationActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 Intent launchMyCluesIntent = new Intent(getApplicationContext(), ScreenSlideActivity.class);
+                //launchMyCluesIntent.put
                 startActivity(launchMyCluesIntent);
             }
         });

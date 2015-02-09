@@ -9,12 +9,20 @@ public class ScavengerHunt {
     private ArrayList<Checkpoint> checkpoints;
     private boolean completed = false;
     private String name;
-    private long id;
 
     public ScavengerHunt(String name) {
         this(name, new ArrayList<Checkpoint>());
     }
-    public ScavengerHunt(String name, ArrayList<Checkpoint> checkpoint){this.name = name; this.checkpoints = checkpoint;}
+
+    public ScavengerHunt(String name, ArrayList<Checkpoint> checkpoint){
+        this.name = name;
+        this.checkpoints = checkpoint;
+        boolean b = true;
+        for (Checkpoint c : this.checkpoints)
+            if (!c.hasBeenReached())
+                b = false;
+        this.completed = b;
+    }
 
     public boolean checkLocation(Location location) {
         return false;
@@ -40,14 +48,6 @@ public class ScavengerHunt {
 
     public boolean getCompleted() {
         return completed;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public long getId() {
-        return this.id;
     }
 
     public String getName() {

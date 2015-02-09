@@ -17,6 +17,7 @@ public class Checkpoint {
         this.location = location;
 
         reached = false;
+        setClue("", null, null, null);
     }
 
     public Location getLocation() {
