@@ -7,17 +7,8 @@ public class Checkpoint {
     private Location location;
     private Clue clue;
     private boolean reached;
-
-    public int getCheckNo() {
-        return checkNo;
-    }
-
-
-    public void setCheckNo(int checkNo) {
-        this.checkNo = checkNo;
-    }
-
     private int checkNo;
+    private long checkId;
 
     public Checkpoint(Location location, int no) {
         this.checkNo = no;
@@ -40,6 +31,22 @@ public class Checkpoint {
 
     public void setClue(String text, String imageURL, String soundURL, String videoURL){
         this.clue = new Clue(text,imageURL,soundURL,videoURL);
+    }
+
+    public int getCheckNo() {
+        return checkNo;
+    }
+
+    public void setCheckNo(int checkNo) {
+        this.checkNo = checkNo;
+    }
+
+    public void setCheckId(long checkId) {
+        this.checkId = checkId;
+    }
+
+    public long getCheckId() {
+        return this.checkId;
     }
 
 

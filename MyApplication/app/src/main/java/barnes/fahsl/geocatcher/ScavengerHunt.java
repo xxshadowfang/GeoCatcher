@@ -43,4 +43,8 @@ public class ScavengerHunt {
     public String getName() {
         return name;
     }
+
+    public ArrayList<Checkpoint> getCheckpoints() {
+        return checkpoints;
+    }
 }

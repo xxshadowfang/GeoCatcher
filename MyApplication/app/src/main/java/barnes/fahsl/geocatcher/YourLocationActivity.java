@@ -1,20 +1,40 @@
 package barnes.fahsl.geocatcher;
 
+import android.content.Context;
 import android.content.Intent;
+import android.location.*;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class YourLocationActivity extends ActionBarActivity {
+
+    static final String KEY_LAT = "KEY_LAT";
+    static final String KEY_LONG = "KEY_LONG";
+
+    private double currentLat;
+    private double currentLong;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_your_location);
+
+        if (savedInstanceState != null) {
+            currentLat = savedInstanceState.getDouble(KEY_LAT, 0);
+            currentLong = savedInstanceState.getDouble(KEY_LONG, 0);
+            TextView latView = (TextView)findViewById(R.id.LatitudeTextView);
+            TextView longView = (TextView)findViewById(R.id.LongitudeTextView);
+            latView.setText(String.format("%.8g", currentLat)+"° Latitude");
+            longView.setText(String.format("%.8g", currentLong)+"° Longitude");
+        }
+
         Button myClueButton = (Button)findViewById(R.id.clue_button_your_location);
         myClueButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -31,6 +51,48 @@ public class YourLocationActivity extends ActionBarActivity {
                 startActivity(launchExitToMainIntent);
             }
         });
+
+        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        LocationListener locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(android.location.Location location) {
+                handleNewLocation(location);
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+
+            }
+        };
+
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 0, locationListener);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putDouble(KEY_LAT, currentLat);
+        outState.putDouble(KEY_LONG, currentLong);
+    }
+
+    private void handleNewLocation(android.location.Location location) {
+        this.currentLat = location.getLatitude();
+        this.currentLong = location.getLongitude();
+        //Toast.makeText(this, "Lat: "+this.currentLat+" Long: "+this.currentLong, Toast.LENGTH_SHORT).show();
+        TextView latView = (TextView)findViewById(R.id.LatitudeTextView);
+        TextView longView = (TextView)findViewById(R.id.LongitudeTextView);
+        latView.setText(String.format("%.8g", currentLat)+"° Latitude");
+        longView.setText(String.format("%.8g", currentLong)+"° Longitude");
     }
 
 

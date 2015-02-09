@@ -27,21 +27,16 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_edit_hunts);
 
-
         Boolean isNew = true;
         if(isNew) {
             checkpoints = new ArrayList<Checkpoint>();
-
         }
         else
             isNew = isNew;
-
-
         Button returnButton = (Button)findViewById(R.id.finishButton);
         returnButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 showFinish();
                 Intent finishIntent = new Intent(getApplicationContext(), GeoCatcherMain.class);
                 startActivity(finishIntent);
