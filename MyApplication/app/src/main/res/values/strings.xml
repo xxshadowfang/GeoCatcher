@@ -53,4 +53,5 @@
     <string name="please_record_location">Please record a location.</string>
     <string name="clue_String">Clue Filler</string>
     <string name="title_activity_screen_slide">ScreenSlideActivity</string>
+    <string name="edit_hunt">Edit Hunt</string>
 </resources>

@@ -42,6 +42,8 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
     private double currentLat = 5000;
     private double currentLong = 5000;
 
+    private boolean isNew;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +53,7 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
         hda.open();
         Spinner checkpointSpinner = (Spinner)findViewById(R.id.checkpointsSpinner);
 
-        Boolean isNew = getIntent().getBooleanExtra(GeoCatcherMain.KEY_NEW_HUNT, true);
+        isNew = getIntent().getBooleanExtra(GeoCatcherMain.KEY_NEW_HUNT, true);
         String[] array;
         if(isNew) {
             checkpoints = new ArrayList<Checkpoint>();
@@ -62,7 +64,7 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
             name = getIntent().getStringExtra(GeoCatcherMain.KEY_HUNT_NAME);
             thisHunt = hda.getHuntByName(name); // Load previous hunt data
             checkpoints = thisHunt.getCheckpoints();
-            array = new String[checkpoints.size()];
+            array = new String[checkpoints.size()+1];
             for (int i = 1; i < checkpoints.size()+1; i++)
                 array[i-1] = "Checkpoint "+i;
             array[checkpoints.size()] = "New Checkpoint";
@@ -191,14 +193,22 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
                 LayoutInflater inflater = getActivity().getLayoutInflater();
                 final View view  = inflater.inflate(R.layout.dialog_fragment_layout, null);
                 builder.setView(view);
+                final EditText input = (EditText)view.findViewById(R.id.nameHuntEdit);
+                if (!isNew)
+                    input.setText(thisHunt.getName());
                 builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        final EditText input = (EditText)view.findViewById(R.id.nameHuntEdit);
                         name =input.getText().toString();
-                        ScavengerHunt newHunt = new ScavengerHunt(name, checkpoints);
-                        hda.addHunt(newHunt);
+                        if (isNew) {
+                            ScavengerHunt newHunt = new ScavengerHunt(name, checkpoints);
+                            hda.addHunt(newHunt);
+                        } else {
+                            ScavengerHunt editedHunt = new ScavengerHunt(name, checkpoints);
+                            hda.deleteHunt(thisHunt);
+                            hda.addHunt(editedHunt);
+                        }
+
                         Intent finishIntent = new Intent(getApplicationContext(), GeoCatcherMain.class);
                         Toast.makeText(getApplicationContext(), "Successfully created hunt: "+name, Toast.LENGTH_SHORT).show();
                         startActivity(finishIntent);

@@ -39,8 +39,29 @@ public class MyHuntsActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 Intent startHuntIntent = new Intent(getApplicationContext(), ScreenSlideActivity.class);
-                startHuntIntent.putExtra(GeoCatcherMain.KEY_HUNT_NAME,((RadioButton)MyHuntsActivity.this.findViewById(myGroup.getCheckedRadioButtonId())).getText().toString());
+                int id = myGroup.getCheckedRadioButtonId();
+                if (id == -1) {
+                    Toast.makeText(getApplicationContext(), "Select a hunt first.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                startHuntIntent.putExtra(GeoCatcherMain.KEY_HUNT_NAME,((RadioButton)MyHuntsActivity.this.findViewById(id)).getText().toString());
                 startActivity(startHuntIntent);
+            }
+        });
+
+        Button editButton = (Button)findViewById(R.id.edit_hunt_button);
+        editButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int id = myGroup.getCheckedRadioButtonId();
+                if (id == -1) {
+                    Toast.makeText(getApplicationContext(), "Select a hunt first.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                Intent editHuntIntent = new Intent(getApplicationContext(), CreateEditHuntsActivity.class);
+                editHuntIntent.putExtra(GeoCatcherMain.KEY_NEW_HUNT, false);
+                editHuntIntent.putExtra(GeoCatcherMain.KEY_HUNT_NAME, ((RadioButton)MyHuntsActivity.this.findViewById(id)).getText().toString());
+                startActivity(editHuntIntent);
             }
         });
 
