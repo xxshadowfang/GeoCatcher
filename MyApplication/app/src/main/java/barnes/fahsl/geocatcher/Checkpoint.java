@@ -1,5 +1,7 @@
 package barnes.fahsl.geocatcher;
 
+import android.graphics.Bitmap;
+
 /**
  * Created by fahslaj on 2/7/2015.
  */
@@ -58,6 +60,7 @@ public class Checkpoint {
         private String imageURL;
         private String soundURL;
         private String videoURL;
+        private Bitmap image;
 
         public Clue(String text, String imageURL, String soundURL, String videoURL) {
             this.text = text;
@@ -80,6 +83,15 @@ public class Checkpoint {
 
         public String getVideoURL() {
             return videoURL;
+        }
+
+        public Bitmap getImage() {
+            return image;
+        }
+
+        public void setImage(Bitmap bmp) {
+            this.image = bmp;
+            this.imageURL = null;
         }
     }
 }
