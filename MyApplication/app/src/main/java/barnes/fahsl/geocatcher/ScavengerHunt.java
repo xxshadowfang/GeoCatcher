@@ -21,11 +21,19 @@ public class ScavengerHunt {
     }
 
     public ArrayList<Checkpoint> getRevealedCheckpoints() {
-        return null;
+        ArrayList<Checkpoint> reachedPoints  = new ArrayList<Checkpoint>();
+        for(Checkpoint check:checkpoints){
+            if(check.hasBeenReached())
+                reachedPoints.add(check);
+        }
+        return reachedPoints;
     }
 
     public Checkpoint getNextCheckpoint() {
-        return null;
+
+
+        return checkpoints.get(getRevealedCheckpoints().size());
+
     }
 
     public boolean getCompleted() {

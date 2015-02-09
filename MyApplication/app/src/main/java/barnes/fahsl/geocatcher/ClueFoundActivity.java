@@ -11,6 +11,7 @@ import android.widget.Button;
 
 public class ClueFoundActivity extends ActionBarActivity {
 
+    ScavengerHunt myHunt;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -1,5 +1,4 @@
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
@@ -8,6 +7,10 @@
     android:background="@color/bg_color"
     android:orientation="vertical"
     tools:context="barnes.fahsl.geocatcher.CreateEditHuntsActivity">
+<LinearLayout
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:orientation="vertical">
 
 
     <TextView
@@ -113,3 +116,4 @@
         android:layout_gravity="center_horizontal" />
 
 </LinearLayout>
+</ScrollView>

@@ -20,6 +20,7 @@ public class YourLocationActivity extends ActionBarActivity {
 
     private double currentLat;
     private double currentLong;
+    private ScavengerHunt myHunt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +40,7 @@ public class YourLocationActivity extends ActionBarActivity {
         myClueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent launchMyCluesIntent = new Intent(getApplicationContext(), ClueFoundActivity.class);
+                Intent launchMyCluesIntent = new Intent(getApplicationContext(), ScreenSlideActivity.class);
                 startActivity(launchMyCluesIntent);
             }
         });

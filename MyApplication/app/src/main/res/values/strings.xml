@@ -49,5 +49,17 @@
     <string name="checkpoint_strgig">Checkpoint </string>
     <string name="Name_your_Hunt">Name Your Hunt</string>
     <string name="hunt_name">Hunt Name</string>
+    <string name="clue_String">Clue Filler</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="action_toggle">Toggle indicator</string>
+    <string name="action_add_item">Add item</string>
+    <string name="action_remove_item">Remove item</string>
+    <string name="action_previous">Previous</string>
+    <string name="action_next">Next</string>
+    <string name="action_finish">Finish</string>
+    <string name="action_info">Photo info</string>
+    <string name="action_photo">View photo</string>
+    <string name="title_activity_screen_slide">ScreenSlideActivity</string>
 
 </resources>
