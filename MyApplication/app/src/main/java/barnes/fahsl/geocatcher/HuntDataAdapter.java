@@ -16,9 +16,6 @@ import android.util.Log;
  */
 public class HuntDataAdapter {
 
-    private static ArrayList<ScavengerHunt> allHunts = new ArrayList<ScavengerHunt>();
-    private static ArrayList<String> huntNames = new ArrayList<String>();
-
     // Becomes the filename of the database
     private static final String DATABASE_NAME = "hunts.db";
     // table name
@@ -54,6 +51,20 @@ public class HuntDataAdapter {
         mDatabase.close();
     }
 
+    public ArrayList<String> getAllHuntNames() {
+        Cursor cursor = mDatabase.query(CHECKPOINT_CLUES_TABLE_NAME, null, null, null, null, null, KEY_CC_ID+" DESC");
+        ArrayList<String> names = new ArrayList<String>();
+        if (cursor == null || !cursor.moveToFirst()) {
+            return null;
+        }
+        do {
+            String name = getNameFromCursor(cursor);
+            if (!names.contains(name))
+                names.add(name);
+        } while (cursor.moveToNext());
+        return names;
+    }
+
     // return the new ID
     public void addHunt(ScavengerHunt hunt) {
         for (Checkpoint p : hunt.getCheckpoints()) {
@@ -67,6 +78,20 @@ public class HuntDataAdapter {
         for (Checkpoint p : hunt.getCheckpoints()) {
             mDatabase.delete(CHECKPOINT_CLUES_TABLE_NAME, KEY_CC_ID + " = " + p.getCheckId(), null);
         }
+    }
+
+    public ScavengerHunt getHuntByName(String name) {
+        Cursor cursor = mDatabase.query(CHECKPOINT_CLUES_TABLE_NAME, null, KEY_HUNT_NAME+" = "+name, null, null, null, KEY_CC_NO+" ASC");
+        ArrayList<Checkpoint> checkpoints = new ArrayList<Checkpoint>();
+        if (cursor == null || !cursor.moveToFirst()) {
+            return null;
+        }
+        do {
+            Checkpoint check = getCheckpointFromCursor(cursor);
+            populateMediaFromURLs(check);
+            checkpoints.add(check);
+        } while (cursor.moveToNext());
+        return new ScavengerHunt(name, checkpoints);
     }
 
     private ContentValues getContentValuesFromCheckpoint(Checkpoint check, String huntName) {
@@ -152,7 +177,7 @@ public class HuntDataAdapter {
             sb.append(KEY_CLUE_TEXT + " text, ");
             sb.append(KEY_CLUE_PIC + " text, ");
             sb.append(KEY_CLUE_SOUND + " text, ");
-            sb.append(KEY_CLUE_VIDEO + " text, ");
+            sb.append(KEY_CLUE_VIDEO + " text");
             sb.append(");");
             CREATE_STATEMENT = sb.toString();
         }
@@ -175,6 +200,10 @@ public class HuntDataAdapter {
             db.execSQL(DROP_STATEMENT);
             db.execSQL(CREATE_STATEMENT);
         }
+    }
+
+    private void populateMediaFromURLs(Checkpoint check) {
+
     }
 }
 
