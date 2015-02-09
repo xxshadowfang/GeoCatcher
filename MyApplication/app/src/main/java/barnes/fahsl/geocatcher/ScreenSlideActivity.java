@@ -1,5 +1,6 @@
 package barnes.fahsl.geocatcher;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -17,6 +18,7 @@ public class ScreenSlideActivity extends FragmentActivity {
     private ArrayList<Checkpoint> checkpoints;
     private ScavengerHunt myHunt;
     private ArrayList<ScreenSlideFragments> frags;
+    private int checkReveal;
 
 
     /**
@@ -34,16 +36,22 @@ public class ScreenSlideActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_screen_slide);
-
+        Intent intent = getIntent();
+        //intent.getStringExtra()
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = (ViewPager) findViewById(R.id.pager);
         mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
-        for(Checkpoint check:checkpoints){
-            ScreenSlideFragments screen = new ScreenSlideFragments();
+        HuntDataAdapter hDA = new HuntDataAdapter(this);
+        hDA.open();
+        //myHunt =hDA.getHuntByName(name);
+        hDA.close();
+        checkpoints = myHunt.getRevealedCheckpoints();
+        checkReveal = checkpoints.size();
+        checkpoints.add(myHunt.getNextCheckpoint());
 
 
-        }
+
     }
 
     @Override
@@ -51,7 +59,7 @@ public class ScreenSlideActivity extends FragmentActivity {
         if (mPager.getCurrentItem() == 0) {
             // If the user is currently looking at the first step, allow the system to handle the
             // Back button. This calls finish() on this activity and pops the back stack.
-            super.onBackPressed();
+            //super.onBackPressed();
         } else {
             // Otherwise, select the previous step.
             mPager.setCurrentItem(mPager.getCurrentItem() - 1);
@@ -70,8 +78,9 @@ public class ScreenSlideActivity extends FragmentActivity {
         @Override
         public Fragment getItem(int position) {
 
-
-            return new ScreenSlideFragments();
+            if(checkReveal==position)
+              ; //show current hint and location;
+            return  ScreenSlideFragments.create(checkpoints.get(position));
         }
 
         @Override

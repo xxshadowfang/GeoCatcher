@@ -8,12 +8,14 @@
         android:orientation="vertical">
 
         <TextView style="?android:textAppearanceMedium"
+            android:id="@+id/HintViewIndClue"
             android:padding="16dp"
             android:lineSpacingMultiplier="1.2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/clue_String" />
         <ImageView
+            android:id="@+id/imageViewIndClue"
             android:layout_width="wrap_content"
             android:layout_height="match_parent" />
     </LinearLayout>
