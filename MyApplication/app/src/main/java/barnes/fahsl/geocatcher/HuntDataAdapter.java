@@ -225,53 +225,53 @@ public class HuntDataAdapter {
     }
 
     private void populateMediaFromURLs(Checkpoint check) {
-        //new PopulateMediaTask().execute(check);
-        Bitmap returnedBitmap;
-        Checkpoint currentCheck = check;
-        try {
-            URL url = new URL("http://fahsl-barnes-geocatcher.appspot.com/serve/AMIfv9751n_1Bnig5JgkR7U0wI3I05fzZeCs_Fi7wk_TvnIthyBNtpsdIk9YMoM2Z6DxVy7HPrMdFvsrnxoocavPxeq4iHXGCZd-eos5fV4x9B9s6WJKFRTKd4rxdjS_ZXZx7VS5SB7dwyM8bnkVFYcuovKLmDpPkuto4cxVS4GmM1hu-asOz_A");//currentCheck.getClue().getImageURL());
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoInput(true);
-            connection.connect();
-            InputStream input = connection.getInputStream();
-            returnedBitmap = BitmapFactory.decodeStream(input);
-            check.getClue().setImage(returnedBitmap);
-        } catch (IOException e) {
-            Log.d("FAHSL", e.getStackTrace().toString());
+        new PopulateMediaTask().execute(check);
+//        Bitmap returnedBitmap;
+//        Checkpoint currentCheck = check;
+//        try {
+//            URL url = new URL("http://fahsl-barnes-geocatcher.appspot.com/serve/AMIfv9751n_1Bnig5JgkR7U0wI3I05fzZeCs_Fi7wk_TvnIthyBNtpsdIk9YMoM2Z6DxVy7HPrMdFvsrnxoocavPxeq4iHXGCZd-eos5fV4x9B9s6WJKFRTKd4rxdjS_ZXZx7VS5SB7dwyM8bnkVFYcuovKLmDpPkuto4cxVS4GmM1hu-asOz_A");//currentCheck.getClue().getImageURL());
+//            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+//            connection.setDoInput(true);
+//            connection.connect();
+//            InputStream input = connection.getInputStream();
+//            returnedBitmap = BitmapFactory.decodeStream(input);
+//            check.getClue().setImage(returnedBitmap);
+//        } catch (IOException e) {
+//            Log.d("FAHSL", e.getStackTrace().toString());
+//        }
+    }
+
+    private class PopulateMediaTask extends AsyncTask<Checkpoint, Void, Bitmap> {
+        private Checkpoint currentCheck;
+
+        @Override
+        protected Bitmap doInBackground(Checkpoint... checks) {
+            Bitmap returnedBitmap;
+            currentCheck = checks[0];
+            try {
+                URL url = new URL(currentCheck.getClue().getImageURL());
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setDoInput(true);
+                connection.connect();
+                InputStream input = connection.getInputStream();
+                returnedBitmap = BitmapFactory.decodeStream(input);
+                return returnedBitmap;
+            } catch (IOException e) {
+                Log.d("FAHSL", e.getStackTrace().toString());
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            super.onPostExecute(result);
+            if (result == null) {
+                Log.d("FAHSL", "Failed loading image");
+                return;
+            }
+            currentCheck.getClue().setImage(result);
         }
     }
-//
-//    private class PopulateMediaTask extends AsyncTask<Checkpoint, Void, Bitmap> {
-//        private Checkpoint currentCheck;
-//
-//        @Override
-//        protected Bitmap doInBackground(Checkpoint... checks) {
-//            Bitmap returnedBitmap;
-//            currentCheck = checks[0];
-//            try {
-//                URL url = new URL(currentCheck.getClue().getImageURL());
-//                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-//                connection.setDoInput(true);
-//                connection.connect();
-//                InputStream input = connection.getInputStream();
-//                returnedBitmap = BitmapFactory.decodeStream(input);
-//                return returnedBitmap;
-//            } catch (IOException e) {
-//                Log.d("FAHSL", e.getStackTrace().toString());
-//            }
-//            return null;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Bitmap result) {
-//            super.onPostExecute(result);
-//            if (result == null) {
-//                Log.d("FAHSL", "Failed loading image");
-//                return;
-//            }
-//            currentCheck.getClue().setImage(result);
-//        }
-//    }
 
     private void assignURLToBMP(Checkpoint check) {
 //        try {
