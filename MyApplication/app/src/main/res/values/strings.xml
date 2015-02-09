@@ -48,5 +48,6 @@
     <string name="return_to_menu_completion">Return To Menu</string>
     <string name="checkpoint_strgig">Checkpoint </string>
     <string name="Name_your_Hunt">Name Your Hunt</string>
+    <string name="hunt_name">Hunt Name</string>
 
 </resources>

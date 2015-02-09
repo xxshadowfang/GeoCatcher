@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.location.Geocoder;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +23,7 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
     private ArrayList<Checkpoint> checkpoints;
     private ScavengerHunt thisHunt;
     private String name;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,15 +38,14 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
         else
             isNew = isNew;
 
-
+        EditText input = (EditText)findViewById(R.id.nameHuntEdit);
         Button returnButton = (Button)findViewById(R.id.finishButton);
         returnButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 showFinish();
-                Intent finishIntent = new Intent(getApplicationContext(), GeoCatcherMain.class);
-                startActivity(finishIntent);
+
             }
         });
     }
@@ -52,7 +53,7 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
     private void showFinish() {
 
         DialogFragment df = new DialogFragment(){
-            final EditText input = new EditText(getActivity());
+
             @Override
             public Dialog onCreateDialog(Bundle savedInstanceState){
 
@@ -60,6 +61,23 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
                 //set options
 
 
+
+                LayoutInflater inflater = getActivity().getLayoutInflater();
+                final View view  = inflater.inflate(R.layout.dialog_fragment_layout, null);
+                builder.setView(view);
+                final EditText input = (EditText)findViewById(R.id.nameHuntEdit);
+                builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        final EditText input = (EditText)view.findViewById(R.id.nameHuntEdit);
+                         name =input.getText().toString();
+
+                        finish();
+                        Intent finishIntent = new Intent(getApplicationContext(), GeoCatcherMain.class);
+                        startActivity(finishIntent);
+                    }
+                });
                 builder.setMessage(R.string.Name_your_Hunt);
                 builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
 
@@ -67,17 +85,6 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
 
-                    }
-                });
-                builder.setView(input);
-                builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        name = input.getText().toString();
-                        //thisHunt = new ScavengerHunt()
-                        //database
-                        finish();
                     }
                 });
 
