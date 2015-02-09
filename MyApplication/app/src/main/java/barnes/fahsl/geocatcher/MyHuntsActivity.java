@@ -24,7 +24,7 @@ public class MyHuntsActivity extends ActionBarActivity {
         HuntDataAdapter hda = new HuntDataAdapter(this);
         hda.open();
         ArrayList <String> names = hda.getAllHuntNames();
-        Toast.makeText(this, "Null? "+(names == null), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Null? "+(names == null), Toast.LENGTH_SHORT).show();
 
         myGroup = (RadioGroup)findViewById(R.id.all_hunts_radio_group);
         RadioButton button;
