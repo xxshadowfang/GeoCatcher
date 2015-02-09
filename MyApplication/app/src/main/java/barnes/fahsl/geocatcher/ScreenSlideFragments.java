@@ -8,6 +8,16 @@ import android.view.ViewGroup;
 
 public class ScreenSlideFragments extends Fragment {
 
+    public static final String BIT_MAP = "bitmaps";
+    public static final String HINT_TEXT = "Hinttext";
+    public static ScreenSlideFragments create(Checkpoint checkpoint) {
+        ScreenSlideFragments fragment = new ScreenSlideFragments();
+        Bundle args = new Bundle();
+        args.putCharArray(HINT_TEXT, checkpoint.getClue().getText().toCharArray());
+        //args.putParcelable(BIT_MAP,checkpoint.);
+        fragment.setArguments(args);
+        return fragment;
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

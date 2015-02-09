@@ -8,11 +8,16 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 
+import java.util.ArrayList;
+
 public class ScreenSlideActivity extends FragmentActivity {
     /**
      * The number of pages (wizard steps) to show in this demo.
      */
-    private static  int NUM_PAGES = 5;
+    private ArrayList<Checkpoint> checkpoints;
+    private ScavengerHunt myHunt;
+    private ArrayList<ScreenSlideFragments> frags;
+
 
     /**
      * The pager widget, which handles animation and allows swiping horizontally to access previous
@@ -34,6 +39,11 @@ public class ScreenSlideActivity extends FragmentActivity {
         mPager = (ViewPager) findViewById(R.id.pager);
         mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
+        for(Checkpoint check:checkpoints){
+            ScreenSlideFragments screen = new ScreenSlideFragments();
+
+
+        }
     }
 
     @Override
@@ -59,12 +69,14 @@ public class ScreenSlideActivity extends FragmentActivity {
 
         @Override
         public Fragment getItem(int position) {
+
+
             return new ScreenSlideFragments();
         }
 
         @Override
         public int getCount() {
-            return NUM_PAGES;
+            return frags.size();
         }
     }
 }

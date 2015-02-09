@@ -28,6 +28,9 @@ public class Checkpoint {
     public boolean hasBeenReached() {
         return reached;
     }
+    public void setReached(Boolean bool){
+        reached = bool;
+    }
 
     public void setClue(String text, String imageURL, String soundURL, String videoURL){
         this.clue = new Clue(text,imageURL,soundURL,videoURL);
