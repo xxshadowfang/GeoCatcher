@@ -37,6 +37,7 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
     private ScavengerHunt thisHunt;
     private String name;
     ImageView imgFavorite;
+    private Bitmap img;
 
     private barnes.fahsl.geocatcher.Location recordedLoc;
     private double currentLat = 5000;
@@ -151,6 +152,7 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
                     Checkpoint newCheckpoint = new Checkpoint(recordedLoc, checkpoints.size() + 1);
                     String text = ((EditText) (CreateEditHuntsActivity.this.findViewById(R.id.hint_text_box))).getText().toString();
                     newCheckpoint.setClue(text, null, null, null);
+                    newCheckpoint.getClue().setImage(img);
                     checkpoints.add(newCheckpoint);
                     String[] array = new String[checkpoints.size() + 1];
                     for (int i = 1; i < checkpoints.size() + 1; i++)
@@ -165,6 +167,7 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
                     editCheckpoint.setLocation(recordedLoc);
                     String text = ((EditText) (CreateEditHuntsActivity.this.findViewById(R.id.hint_text_box))).getText().toString();
                     editCheckpoint.setClue(text, null, null, null);
+                    editCheckpoint.getClue().setImage(img);
                 }
             }
         });
@@ -177,6 +180,7 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
             ((EditText)findViewById(R.id.hint_text_box)).setText("");
             ((ImageView)findViewById(R.id.clue_image_view)).setImageResource(android.R.color.transparent);
             recordedLoc = null;
+            img = null;
             return;
         }
         Checkpoint currentCheckpoint = checkpoints.get(position);
@@ -264,7 +268,7 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // TODO Auto-generated method stub
         super.onActivityResult(requestCode, resultCode, data);
-        Bitmap bp = (Bitmap) data.getExtras().get("data");
-        imgFavorite.setImageBitmap(bp);
+        img = (Bitmap) data.getExtras().get("data");
+        imgFavorite.setImageBitmap(img);
     }
 }
