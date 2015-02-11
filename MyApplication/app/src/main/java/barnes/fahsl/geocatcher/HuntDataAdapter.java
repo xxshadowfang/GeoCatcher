@@ -8,7 +8,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -22,21 +21,16 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.util.Pair;
 import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -186,18 +180,17 @@ public class HuntDataAdapter {
     }
 
     public Cursor getCheckpointsCursor() {
-        String[] projection = new String[]{KEY_CC_ID, KEY_HUNT_NAME, KEY_CC_NO, KEY_CHECK_REACHED,
-                KEY_CHECK_LAT, KEY_CHECK_LONG, KEY_CLUE_TEXT, KEY_CLUE_PIC, KEY_CLUE_SOUND, KEY_CLUE_VIDEO};
-        return mDatabase.query(CHECKPOINT_CLUES_TABLE_NAME, projection, null, null, null, null, KEY_CC_ID + " DESC");
+        String[] projection = new String[] {KEY_CC_ID, KEY_HUNT_NAME, KEY_CC_NO, KEY_CHECK_REACHED,
+                KEY_CHECK_LAT, KEY_CHECK_LONG, KEY_CLUE_TEXT, KEY_CLUE_PIC, KEY_CLUE_SOUND, KEY_CLUE_VIDEO };
+        return mDatabase.query(CHECKPOINT_CLUES_TABLE_NAME, projection, null, null, null, null, KEY_CC_ID+" DESC");
     }
 
     private static class HuntDbHelper extends SQLiteOpenHelper {
 
         private static final String CREATE_STATEMENT;
-
         static {
             StringBuilder sb = new StringBuilder();
-            sb.append("CREATE TABLE " + CHECKPOINT_CLUES_TABLE_NAME + "(");
+            sb.append("CREATE TABLE "+CHECKPOINT_CLUES_TABLE_NAME+"(");
             sb.append(KEY_CC_ID + " integer primary key autoincrement, ");
             sb.append(KEY_HUNT_NAME + " text, ");
             sb.append(KEY_CC_NO + " integer, ");
