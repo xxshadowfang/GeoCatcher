@@ -154,6 +154,7 @@ public class HuntDataAdapter {
 
     public void setAllHunts(ArrayList<ScavengerHunt> hunts) {
         String[] columns = {KEY_HUNT_NAME};
+
         Cursor cursor = mDatabase.query(CHECKPOINT_CLUES_TABLE_NAME, columns, null, null, null, null, KEY_HUNT_NAME+" DESC");
         if (cursor == null || !cursor.moveToFirst()) {
             return;
