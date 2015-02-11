@@ -1,6 +1,7 @@
 package barnes.fahsl.geocatcher;
 
 import android.graphics.Bitmap;
+import android.net.Uri;
 
 /**
  * Created by fahslaj on 2/7/2015.
