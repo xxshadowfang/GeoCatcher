@@ -6,6 +6,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -13,6 +14,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -89,8 +91,10 @@ public class HuntDataAdapter {
 
     public void addHunt(ScavengerHunt hunt) {
         for (Checkpoint p : hunt.getCheckpoints()) {
-            if (p.getClue().getImageURL() == null)
+            if (p.getClue().getImage() != null && p.getClue().getImageURL() == null) {
+                Log.d("FAHSL", "Has image, assigning URL");
                 assignURLToBMP(p);
+            }
             ContentValues row = getContentValuesFromCheckpoint(p, hunt.getName());
             long id = mDatabase.insert(CHECKPOINT_CLUES_TABLE_NAME, null, row);
             p.setCheckId(id);
@@ -110,9 +114,7 @@ public class HuntDataAdapter {
             return null;
         }
         do {
-            Checkpoint check = getCheckpointFromCursor(cursor);
-            populateMediaFromURLs(check);
-            checkpoints.add(check);
+            checkpoints.add(getCheckpointFromCursor(cursor));
         } while (cursor.moveToNext());
         return new ScavengerHunt(name, checkpoints);
     }
@@ -146,6 +148,7 @@ public class HuntDataAdapter {
         Checkpoint check = new Checkpoint(loc, checkNo);
         check.setClue(text, imageURL, soundURL, videoURL);
         check.setCheckId(cursor.getLong(cursor.getColumnIndexOrThrow(KEY_CC_ID)));
+            populateMediaFromURLs(check);
         return check;
     }
 
@@ -161,7 +164,6 @@ public class HuntDataAdapter {
         }
         hunts.clear();
         String prevName = null;
-        ArrayList<String> huntsCreated = new ArrayList<String>();
         ArrayList<Checkpoint> checkpoints = new ArrayList<Checkpoint>();
         checkpoints.add(getCheckpointFromCursor(cursor));
         prevName = getNameFromCursor(cursor);
@@ -228,19 +230,6 @@ public class HuntDataAdapter {
 
     private void populateMediaFromURLs(Checkpoint check) {
         new PopulateMediaTask().execute(check);
-//        Bitmap returnedBitmap;
-//        Checkpoint currentCheck = check;
-//        try {
-//            URL url = new URL("http://fahsl-barnes-geocatcher.appspot.com/serve/AMIfv9751n_1Bnig5JgkR7U0wI3I05fzZeCs_Fi7wk_TvnIthyBNtpsdIk9YMoM2Z6DxVy7HPrMdFvsrnxoocavPxeq4iHXGCZd-eos5fV4x9B9s6WJKFRTKd4rxdjS_ZXZx7VS5SB7dwyM8bnkVFYcuovKLmDpPkuto4cxVS4GmM1hu-asOz_A");//currentCheck.getClue().getImageURL());
-//            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-//            connection.setDoInput(true);
-//            connection.connect();
-//            InputStream input = connection.getInputStream();
-//            returnedBitmap = BitmapFactory.decodeStream(input);
-//            check.getClue().setImage(returnedBitmap);
-//        } catch (IOException e) {
-//            Log.d("FAHSL", e.getStackTrace().toString());
-//        }
     }
 
     private class PopulateMediaTask extends AsyncTask<Checkpoint, Void, Bitmap> {
@@ -251,6 +240,7 @@ public class HuntDataAdapter {
             Bitmap returnedBitmap;
             currentCheck = checks[0];
             try {
+                Log.d("FAHSL", "Loading image.... url: "+currentCheck.getClue().getImageURL());
                 URL url = new URL(currentCheck.getClue().getImageURL());
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setDoInput(true);
@@ -272,6 +262,7 @@ public class HuntDataAdapter {
                 return;
             }
             currentCheck.getClue().setImage(result);
+            Log.d("FAHSL", "Successfully set image.");
         }
     }
 
@@ -284,61 +275,49 @@ public class HuntDataAdapter {
     private class GetBlobUrlTask extends AsyncTask<Checkpoint, Void, Void> {
         @Override
         protected Void doInBackground(Checkpoint... args) {
-            Log.d("FAHSL", "Attempting to write file...");
+            Checkpoint check = args[0];
+            String filename = "testFile"+ (NUM_IMGS_UPLOADED++) + ".png";
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            check.getClue().getImage().compress(Bitmap.CompressFormat.PNG, 0, bos);
+            ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
+
+            String requestURL = "";
+            String baseGetUrl = "http://fahsl-barnes-geocatcher.appspot.com/";
             try {
-                Bitmap bm = args[0].getClue().getImage();
-                ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                bm.compress(Bitmap.CompressFormat.JPEG, 50, bos);
-
-                URL url = new URL("http://www.rose-hulman.edu/~fahslaj/GeoCatcherTestBE/testUpload.php");
-                HttpURLConnection connection = (HttpURLConnection)url.openConnection();
-                String boundary =  "*****";
-                String lineEnd = "\r\n";
-                String twoHyphens = "--";
-
-                connection.setDoInput(true);
-                connection.setDoOutput(true);
-                connection.setUseCaches(false);
-
-                connection.setRequestMethod("POST");
-                connection.setRequestProperty("Connection", "Keep-Alive");
-                connection.setRequestProperty("Content-Type", "multipart/form-data;boundary="+boundary);
-                Log.d("FAHSL", "Created request. Writing bytes...");
-
-                DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
-                outputStream.writeBytes(twoHyphens + boundary + lineEnd);
-                outputStream.writeBytes("Content-Disposition: form-data; name=\"uploadedfile\";filename=\"" + "image"+NUM_IMGS_UPLOADED +"\"" + lineEnd);
-                outputStream.writeBytes(lineEnd);
-
-                int maxBufferSize = 1024*1024;
-                InputStream is = new ByteArrayInputStream(bos.toByteArray());
-                int bytesAvailable = is.available();
-                int bufferSize = Math.min(bytesAvailable, maxBufferSize);
-                byte[] buffer = new byte[bufferSize];
-
-                int bytesRead = is.read(buffer, 0, bufferSize);
-
-                while (bytesRead > 0) {
-                    outputStream.write(buffer, 0, bufferSize);
-                    bytesAvailable = is.available();
-                    bufferSize = Math.min(bytesAvailable, maxBufferSize);
-                    bytesRead = is.read(buffer, 0, bufferSize);
+                HttpClient httpClient = new DefaultHttpClient();
+                HttpGet httpGet = new HttpGet(baseGetUrl);
+                HttpResponse response = httpClient.execute(httpGet);
+                HttpEntity urlEntity = response.getEntity();
+                InputStream in = urlEntity.getContent();
+                while (true) {
+                    int ch = in.read();
+                    if (ch == -1)
+                        break;
+                    requestURL += (char) ch;
                 }
+            } catch (Exception e) {
+                Log.d("FAHSL", e.getStackTrace().toString());
+            }
 
-                outputStream.writeBytes(lineEnd);
-                outputStream.writeBytes(twoHyphens+boundary+twoHyphens+lineEnd);
+            String charset = "UTF-8";
+            String responseStr = "";
+            try {
+                MultipartUtility multipart = new MultipartUtility(requestURL, charset);
 
-                int serverResponseCode = connection.getResponseCode();
-                String serverResponseMessage = connection.getResponseMessage();
+                multipart.addFilePartFromStream("file", filename, bis);
 
-                Log.d("FAHSL", "Finished writing. Response Code: "+serverResponseCode+"Response Message: "+serverResponseMessage);
+                List<String> response = multipart.finish();
 
-                is.close();
-                outputStream.flush();
-                outputStream.close();
+                //System.out.println("SERVER REPLIED:");
 
-            } catch (IOException e) { Log.d("FAHSL", e.getStackTrace().toString()); }
-
+                for (String line : response) {
+                    responseStr += line;
+                }
+            } catch (IOException ex) {
+                System.err.println(ex);
+            }
+            check.getClue().setImageURL(baseGetUrl+"serve/"+responseStr);
+            Log.d("FAHSL", baseGetUrl+"serve/"+responseStr);
             return null;
         }
     }

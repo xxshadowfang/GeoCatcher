@@ -104,7 +104,6 @@ public class Checkpoint {
 
         public void setImage(Bitmap bmp) {
             this.image = bmp;
-            this.imageURL = null;
         }
     }
 }
