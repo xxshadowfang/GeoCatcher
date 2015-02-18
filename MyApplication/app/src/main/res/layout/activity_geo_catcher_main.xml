@@ -1,10 +1,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    xmlns:flatui="http://schemas.android.com/apk/res-auto"
+
     android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".GeoCatcherMain"
-    android:background="@color/bg_color">
+    >
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -15,12 +18,14 @@
 
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
-    <Button
+    <com.cengalabs.flatui.views.FlatButton
+
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/my_hunts_title"
         android:id="@+id/myHuntsButton"
-
+        flatui:fl_textColor="fl_main"
+        flatui:fl_theme="@array/grass"
         android:layout_marginTop="50dp"
         android:layout_alignTop="@id/CreateNewHuntsButton"
         android:layout_alignStart="@id/CreateNewHuntsButton"
@@ -43,8 +48,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/Main_image_view"
         android:src="@drawable/title_image"
-        android:layout_marginBottom="22dp"
-        android:layout_above="@+id/CreateNewHuntsButton"
+        android:layout_below="@+id/Main_title_text"
         android:layout_centerHorizontal="true" />
 
     <TextView
@@ -54,7 +58,6 @@
         android:text="@string/app_name"
         android:textSize="40sp"
         android:id="@+id/Main_title_text"
-        android:layout_marginTop="39dp"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignEnd="@+id/Main_image_view" />
 </RelativeLayout>

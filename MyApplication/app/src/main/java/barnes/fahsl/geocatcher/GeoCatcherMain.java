@@ -1,5 +1,6 @@
 package barnes.fahsl.geocatcher;
 
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -7,6 +8,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import com.cengalabs.flatui.FlatUI;
+import com.cengalabs.flatui.views.FlatButton;
+
+import com.cengalabs.flatui.views.FlatTextView;
+
+
 
 
 public class GeoCatcherMain extends ActionBarActivity {
@@ -18,8 +25,12 @@ public class GeoCatcherMain extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_geo_catcher_main);
+        FlatUI.initDefaultValues(this);
+        FlatUI.setDefaultTheme(FlatUI.GRASS);
+        //getActionBar().setBackgroundDrawable(FlatUI.getActionBarDrawable(this,FlatUI.GRASS,false));
+        //getSupportActionBar().setBackgroundDrawable(FlatUI.getActionBarDrawable(this,FlatUI.GRASS,false));
 
-        Button myHuntsButton = (Button)findViewById(R.id.myHuntsButton);
+        FlatButton myHuntsButton = (FlatButton)findViewById(R.id.myHuntsButton);
         myHuntsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
