@@ -28,7 +28,7 @@ public class GeoCatcherMain extends ActionBarActivity {
         FlatUI.initDefaultValues(this);
         FlatUI.setDefaultTheme(FlatUI.GRASS);
         //getActionBar().setBackgroundDrawable(FlatUI.getActionBarDrawable(this,FlatUI.GRASS,false));
-        //getSupportActionBar().setBackgroundDrawable(FlatUI.getActionBarDrawable(this,FlatUI.GRASS,false));
+        getSupportActionBar().setBackgroundDrawable(FlatUI.getActionBarDrawable(this,FlatUI.GRASS,false));
 
         FlatButton myHuntsButton = (FlatButton)findViewById(R.id.myHuntsButton);
         myHuntsButton.setOnClickListener(new View.OnClickListener() {
@@ -38,7 +38,7 @@ public class GeoCatcherMain extends ActionBarActivity {
                 startActivity(launchMyHuntsIntent);
             }
         });
-        Button myCreateButton = (Button)findViewById(R.id.CreateNewHuntsButton);
+        FlatButton myCreateButton = (FlatButton)findViewById(R.id.CreateNewHuntsButton);
         myCreateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -47,7 +47,7 @@ public class GeoCatcherMain extends ActionBarActivity {
                 startActivity(launchCreateEditHuntsIntent);
             }
         });
-        Button shareButton = (Button)findViewById(R.id.ShareHuntsButton);
+        FlatButton shareButton = (FlatButton)findViewById(R.id.ShareHuntsButton);
         shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

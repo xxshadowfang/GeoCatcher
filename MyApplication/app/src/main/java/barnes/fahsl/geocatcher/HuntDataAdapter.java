@@ -2,17 +2,12 @@ package barnes.fahsl.geocatcher;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.GregorianCalendar;
+import java.util.List;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -23,15 +18,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONObject;
 
 /**
  * Created by fahslaj on 2/7/2015.
@@ -74,7 +66,7 @@ public class HuntDataAdapter {
     }
 
     public ArrayList<String> getAllHuntNames() {
-        Cursor cursor = mDatabase.query(CHECKPOINT_CLUES_TABLE_NAME, null, null, null, null, null, KEY_CC_ID+" DESC");
+        Cursor cursor = mDatabase.query(CHECKPOINT_CLUES_TABLE_NAME, null, null, null, null, null, KEY_CC_ID + " DESC");
         ArrayList<String> names = new ArrayList<String>();
         if (cursor == null || !cursor.moveToFirst()) {
             return null;
@@ -88,11 +80,89 @@ public class HuntDataAdapter {
     }
 
     public void addHunt(ScavengerHunt hunt) {
+
+        int counter = 0;
         for (Checkpoint p : hunt.getCheckpoints()) {
-            assignURLToBMP(p);
-            ContentValues row = getContentValuesFromCheckpoint(p, hunt.getName());
+            boolean needsAssignment = false;
+            if (p.getClue().getImage() != null && p.getClue().getImageURL() == null) {
+                Log.d("FAHSL", "Has image, assigning URL");
+                needsAssignment = true;
+            }
+            new AddCheckpointTask().execute(p, needsAssignment, hunt.getName(), counter);
+            counter++;
+        }
+    }
+
+    private class AddCheckpointTask extends AsyncTask<Object, Void, Void> {
+
+        String name;
+        Checkpoint check;
+
+        @Override
+        protected Void doInBackground(Object... params) {
+            check = (Checkpoint)params[0];
+            boolean assign = (Boolean)params[1];
+            name = (String)params[2];
+            int counter = (Integer)params[3];
+            if (assign) {
+                assignURLToBMP(check, counter);
+            } else {
+                // dont do image stuff
+            }
+            return null;
+        }
+
+        private void assignURLToBMP(Checkpoint check, int num) {
+            String filename = name+""+num+".png";
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            check.getClue().getImage().compress(Bitmap.CompressFormat.PNG, 0, bos);
+            ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
+
+            String requestURL = "";
+            String baseGetUrl = "http://fahsl-barnes-geocatcher.appspot.com/";
+            try {
+                HttpClient httpClient = new DefaultHttpClient();
+                HttpGet httpGet = new HttpGet(baseGetUrl);
+                HttpResponse response = httpClient.execute(httpGet);
+                HttpEntity urlEntity = response.getEntity();
+                InputStream in = urlEntity.getContent();
+                while (true) {
+                    int ch = in.read();
+                    if (ch == -1)
+                        break;
+                    requestURL += (char) ch;
+                }
+            } catch (Exception e) {
+                Log.d("FAHSL", e.getStackTrace().toString());
+            }
+
+            String charset = "UTF-8";
+            String responseStr = "";
+            try {
+                MultipartUtility multipart = new MultipartUtility(requestURL, charset);
+
+                multipart.addFilePartFromStream("file", filename, bis);
+
+                List<String> response = multipart.finish();
+
+                //System.out.println("SERVER REPLIED:");
+
+                for (String line : response) {
+                    responseStr += line;
+                }
+            } catch (IOException ex) {
+                System.err.println(ex);
+            }
+            check.getClue().setImageURL(baseGetUrl+"serve/"+responseStr);
+            Log.d("FAHSL", baseGetUrl+"serve/"+responseStr);
+        }
+
+        @Override
+        protected void onPostExecute(Void v) {
+            super.onPostExecute(v);
+            ContentValues row = getContentValuesFromCheckpoint(check, name);
             long id = mDatabase.insert(CHECKPOINT_CLUES_TABLE_NAME, null, row);
-            p.setCheckId(id);
+            check.setCheckId(id);
         }
     }
 
@@ -103,15 +173,13 @@ public class HuntDataAdapter {
     }
 
     public ScavengerHunt getHuntByName(String name) {
-        Cursor cursor = mDatabase.query(CHECKPOINT_CLUES_TABLE_NAME, null, KEY_HUNT_NAME+" = '"+name+"'", null, null, null, KEY_CC_NO+" ASC");
+        Cursor cursor = mDatabase.query(CHECKPOINT_CLUES_TABLE_NAME, null, KEY_HUNT_NAME + " = '" + name + "'", null, null, null, KEY_CC_NO + " ASC");
         ArrayList<Checkpoint> checkpoints = new ArrayList<Checkpoint>();
         if (cursor == null || !cursor.moveToFirst()) {
             return null;
         }
         do {
-            Checkpoint check = getCheckpointFromCursor(cursor);
-            populateMediaFromURLs(check);
-            checkpoints.add(check);
+            checkpoints.add(getCheckpointFromCursor(cursor));
         } while (cursor.moveToNext());
         return new ScavengerHunt(name, checkpoints);
     }
@@ -120,7 +188,7 @@ public class HuntDataAdapter {
         ContentValues row = new ContentValues();
         row.put(KEY_HUNT_NAME, huntName);
         row.put(KEY_CC_NO, check.getCheckNo());
-        row.put(KEY_CHECK_REACHED, check.hasBeenReached()?1:0);
+        row.put(KEY_CHECK_REACHED, check.hasBeenReached() ? 1 : 0);
         Location loc = check.getLocation();
         row.put(KEY_CHECK_LAT, loc.getLatitude());
         row.put(KEY_CHECK_LONG, loc.getLongitude());
@@ -134,7 +202,7 @@ public class HuntDataAdapter {
 
     public Checkpoint getCheckpointFromCursor(Cursor cursor) {
         int checkNo = cursor.getInt(cursor.getColumnIndexOrThrow(KEY_CC_NO));
-        boolean reached = cursor.getInt(cursor.getColumnIndexOrThrow(KEY_CHECK_REACHED))==1;
+        boolean reached = cursor.getInt(cursor.getColumnIndexOrThrow(KEY_CHECK_REACHED)) == 1;
         double lat = cursor.getDouble(cursor.getColumnIndexOrThrow(KEY_CHECK_LAT));
         double lon = cursor.getDouble(cursor.getColumnIndexOrThrow(KEY_CHECK_LONG));
         String text = cursor.getString(cursor.getColumnIndexOrThrow(KEY_CLUE_TEXT));
@@ -143,8 +211,10 @@ public class HuntDataAdapter {
         String videoURL = cursor.getString(cursor.getColumnIndexOrThrow(KEY_CLUE_VIDEO));
         Location loc = new Location(lat, lon);
         Checkpoint check = new Checkpoint(loc, checkNo);
+        check.setReached(reached);
         check.setClue(text, imageURL, soundURL, videoURL);
         check.setCheckId(cursor.getLong(cursor.getColumnIndexOrThrow(KEY_CC_ID)));
+            populateMediaFromURLs(check);
         return check;
     }
 
@@ -154,14 +224,12 @@ public class HuntDataAdapter {
 
     public void setAllHunts(ArrayList<ScavengerHunt> hunts) {
         String[] columns = {KEY_HUNT_NAME};
-
-        Cursor cursor = mDatabase.query(CHECKPOINT_CLUES_TABLE_NAME, columns, null, null, null, null, KEY_HUNT_NAME+" DESC");
+        Cursor cursor = mDatabase.query(CHECKPOINT_CLUES_TABLE_NAME, columns, null, null, null, null, KEY_HUNT_NAME + " DESC");
         if (cursor == null || !cursor.moveToFirst()) {
             return;
         }
         hunts.clear();
         String prevName = null;
-        ArrayList<String> huntsCreated = new ArrayList<String>();
         ArrayList<Checkpoint> checkpoints = new ArrayList<Checkpoint>();
         checkpoints.add(getCheckpointFromCursor(cursor));
         prevName = getNameFromCursor(cursor);
@@ -204,7 +272,8 @@ public class HuntDataAdapter {
             sb.append(");");
             CREATE_STATEMENT = sb.toString();
         }
-        private static final String DROP_STATEMENT = "DROP TABLE IF EXISTS "+CHECKPOINT_CLUES_TABLE_NAME;
+
+        private static final String DROP_STATEMENT = "DROP TABLE IF EXISTS " + CHECKPOINT_CLUES_TABLE_NAME;
 
         public HuntDbHelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -217,8 +286,8 @@ public class HuntDataAdapter {
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            Log.d("SLS", "Upgrading the database from version "+
-                    oldVersion+" to "+newVersion+
+            Log.d("SLS", "Upgrading the database from version " +
+                    oldVersion + " to " + newVersion +
                     " will destroy all your data.");
             db.execSQL(DROP_STATEMENT);
             db.execSQL(CREATE_STATEMENT);
@@ -227,19 +296,6 @@ public class HuntDataAdapter {
 
     private void populateMediaFromURLs(Checkpoint check) {
         new PopulateMediaTask().execute(check);
-//        Bitmap returnedBitmap;
-//        Checkpoint currentCheck = check;
-//        try {
-//            URL url = new URL("http://fahsl-barnes-geocatcher.appspot.com/serve/AMIfv9751n_1Bnig5JgkR7U0wI3I05fzZeCs_Fi7wk_TvnIthyBNtpsdIk9YMoM2Z6DxVy7HPrMdFvsrnxoocavPxeq4iHXGCZd-eos5fV4x9B9s6WJKFRTKd4rxdjS_ZXZx7VS5SB7dwyM8bnkVFYcuovKLmDpPkuto4cxVS4GmM1hu-asOz_A");//currentCheck.getClue().getImageURL());
-//            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-//            connection.setDoInput(true);
-//            connection.connect();
-//            InputStream input = connection.getInputStream();
-//            returnedBitmap = BitmapFactory.decodeStream(input);
-//            check.getClue().setImage(returnedBitmap);
-//        } catch (IOException e) {
-//            Log.d("FAHSL", e.getStackTrace().toString());
-//        }
     }
 
     private class PopulateMediaTask extends AsyncTask<Checkpoint, Void, Bitmap> {
@@ -250,7 +306,8 @@ public class HuntDataAdapter {
             Bitmap returnedBitmap;
             currentCheck = checks[0];
             try {
-                URL url = new URL("http://fahsl-barnes-geocatcher.appspot.com/serve/AMIfv9751n_1Bnig5JgkR7U0wI3I05fzZeCs_Fi7wk_TvnIthyBNtpsdIk9YMoM2Z6DxVy7HPrMdFvsrnxoocavPxeq4iHXGCZd-eos5fV4x9B9s6WJKFRTKd4rxdjS_ZXZx7VS5SB7dwyM8bnkVFYcuovKLmDpPkuto4cxVS4GmM1hu-asOz_A");//currentCheck.getClue().getImageURL());
+                Log.d("FAHSL", "Loading image.... url: "+currentCheck.getClue().getImageURL());
+                URL url = new URL(currentCheck.getClue().getImageURL());
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setDoInput(true);
                 connection.connect();
@@ -271,104 +328,9 @@ public class HuntDataAdapter {
                 return;
             }
             currentCheck.getClue().setImage(result);
+            Log.d("FAHSL", "Successfully set image.");
         }
     }
 
-    private void assignURLToBMP(Checkpoint check) {
-//        try {
-//            HttpClient httpClient = new DefaultHttpClient();
-//            HttpGet httpGet = new HttpGet("http://fahsl-barnes-geocatcher.appspot.com/upload");
-//            HttpResponse response = httpClient.execute(httpGet);
-//            HttpEntity urlEntity = response.getEntity();
-//            InputStream in = urlEntity.getContent();
-//            String str = "";
-//            while (true) {
-//                int ch = in.read();
-//                if (ch == -1)
-//                    break;
-//                str += (char) ch;
-//            }
-//        } catch (Exception e) {
-//            Log.d("FAHSL", e.getStackTrace().toString());
-//        }
-
-//        Bitmap bmp = check.getClue().getImage();
-//        HttpURLConnection connection = null;
-//        DataOutputStream outputStream = null;
-////        DataInputStream inputStream = null;
-//        String pathToOurFile = "/data/file_to_send.mp3";
-//        String urlServer = "http://fahsl-barnes-geocatcher.appspot.com/_ah/upload/";
-//        //String urlServer = "http://fahsl-barnes-geocatcher.appspot.com/";
-//        String lineEnd = "\r\n";
-//        String twoHyphens = "--";
-//        String boundary =  "*****";
-//
-//        int bytesRead, bytesAvailable, bufferSize;
-//        byte[] buffer;
-//        int maxBufferSize = 1*1024*1024;
-//
-//        try
-//        {
-//            FileInputStream fileInputStream = new FileInputStream(new File(pathToOurFile) );
-//
-//            URL url = new URL(urlServer);
-//            connection = (HttpURLConnection) url.openConnection();
-//
-//            // Allow Inputs &amp; Outputs.
-//            connection.setDoInput(true);
-//            connection.setDoOutput(true);
-//            connection.setUseCaches(false);
-//
-//            // Set HTTP method to POST.
-//            connection.setRequestMethod("POST");
-//
-//            connection.setRequestProperty("Connection", "Keep-Alive");
-//            connection.setRequestProperty("Content-Type", "multipart/form-data;boundary="+boundary);
-//
-//            outputStream = new DataOutputStream( connection.getOutputStream() );
-//            outputStream.writeBytes(twoHyphens + boundary + lineEnd);
-//            outputStream.writeBytes("Content-Disposition: form-data; name=\"uploadedfile\";filename=\"" + pathToOurFile +"\"" + lineEnd);
-//            outputStream.writeBytes(lineEnd);
-//
-//            bytesAvailable = fileInputStream.available();
-//            bufferSize = Math.min(bytesAvailable, maxBufferSize);
-//            buffer = new byte[bufferSize];
-//
-////            // Read file
-////            bytesRead = fileInputStream.read(buffer, 0, bufferSize);
-//
-//            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-//            bmp.compress(Bitmap.CompressFormat.PNG, 0 /*ignored for PNG*/, bos);
-//            byte[] bitmapdata = bos.toByteArray();
-//            ByteArrayInputStream bs = new ByteArrayInputStream(bitmapdata);
-//
-//            bytesRead = bs.read(buffer, 0, bufferSize);
-//
-//            while (bytesRead > 0)
-//            {
-//                outputStream.write(buffer, 0, bufferSize);
-//                bytesAvailable = bs.available();
-//                bufferSize = Math.min(bytesAvailable, maxBufferSize);
-//                bytesRead = bs.read(buffer, 0, bufferSize);
-//            }
-//
-//            outputStream.writeBytes(lineEnd);
-//            outputStream.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
-//
-//            // Responses from the server (code and message)
-//            int serverResponseCode = connection.getResponseCode();
-//            String serverResponseMessage = connection.getResponseMessage();
-//            //Log.d("FAHSL", "URL: "+serverResponseMessage);
-//            check.getClue().setImageURL(serverResponseMessage);
-//            fileInputStream.close();
-//            outputStream.flush();
-//            outputStream.close();
-//        }
-//        catch (Exception ex)
-//        {
-//            //Exception handling
-//            Log.d("FAHSL", ex.getStackTrace().toString());
-//        }
-    }
 }
 

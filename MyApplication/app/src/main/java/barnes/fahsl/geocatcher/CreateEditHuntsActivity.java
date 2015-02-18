@@ -6,9 +6,12 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.location.*;
 import android.location.Location;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.content.CursorLoader;
 
 import java.util.ArrayList;
 
@@ -267,7 +271,6 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // TODO Auto-generated method stub
         super.onActivityResult(requestCode, resultCode, data);
         img = (Bitmap) data.getExtras().get("data");
         imgFavorite.setImageBitmap(img);

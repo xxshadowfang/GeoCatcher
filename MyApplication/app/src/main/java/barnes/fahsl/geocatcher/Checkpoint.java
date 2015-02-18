@@ -1,6 +1,7 @@
 package barnes.fahsl.geocatcher;
 
 import android.graphics.Bitmap;
+import android.net.Uri;
 
 /**
  * Created by fahslaj on 2/7/2015.
@@ -103,7 +104,6 @@ public class Checkpoint {
 
         public void setImage(Bitmap bmp) {
             this.image = bmp;
-            this.imageURL = null;
         }
     }
 }

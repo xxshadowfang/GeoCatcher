@@ -1,22 +1,23 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     xmlns:flatui="http://schemas.android.com/apk/res-auto"
-
+    android:background="@color/grass_dark"
     android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".GeoCatcherMain"
     >
 
-    <Button
+    <com.cengalabs.flatui.views.FlatButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/CreateNewHuntsButton"
-
-        android:layout_marginBottom="161dp"
+        flatui:fl_textColor="fl_main"
+        flatui:fl_theme="@array/grass"
+        android:layout_marginTop="15dp"
         android:text="@string/create_new_hunts"
 
-        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/Main_image_view"
         android:layout_centerHorizontal="true" />
     <com.cengalabs.flatui.views.FlatButton
 
@@ -26,20 +27,24 @@
         android:id="@+id/myHuntsButton"
         flatui:fl_textColor="fl_main"
         flatui:fl_theme="@array/grass"
-        android:layout_marginTop="50dp"
-        android:layout_alignTop="@id/CreateNewHuntsButton"
+        android:layout_marginTop="10dp"
         android:layout_alignStart="@id/CreateNewHuntsButton"
-        android:layout_alignEnd="@id/CreateNewHuntsButton" />
+        android:layout_alignEnd="@id/CreateNewHuntsButton"
+        android:layout_below="@+id/CreateNewHuntsButton" />
 
-    <Button
+    <com.cengalabs.flatui.views.FlatButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/share_new_hunts"
         android:id="@+id/ShareHuntsButton"
+        flatui:fl_textColor="fl_main"
 
+        flatui:fl_theme="@array/grass"
         android:layout_below="@id/myHuntsButton"
         android:layout_alignStart="@id/myHuntsButton"
-        android:layout_alignEnd="@id/myHuntsButton" />
+        android:layout_alignEnd="@id/myHuntsButton"
+        android:padding="10dp"
+        android:layout_marginTop="10dp" />
 
 
 
@@ -47,17 +52,29 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/Main_image_view"
-        android:src="@drawable/title_image"
+        android:src="@drawable/title_world"
         android:layout_below="@+id/Main_title_text"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp" />
 
-    <TextView
+    <com.cengalabs.flatui.views.FlatTextView
+        flatui:fl_textColor="fl_light"
+        flatui:fl_theme="@array/grass"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/app_name"
         android:textSize="40sp"
+        flatui:fl_fontWeight = "dark"
         android:id="@+id/Main_title_text"
         android:layout_alignParentTop="true"
-        android:layout_alignEnd="@+id/Main_image_view" />
+        android:layout_centerHorizontal="true"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView"
+        android:layout_above="@+id/ShareHuntsButton"
+        android:layout_alignStart="@+id/Main_image_view" />
 </RelativeLayout>
