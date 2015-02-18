@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.cengalabs.flatui.FlatUI;
+
 
 public class CompletionActivity extends ActionBarActivity {
     private int compclues;
@@ -16,6 +18,7 @@ public class CompletionActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_completion);
+        getSupportActionBar().setBackgroundDrawable(FlatUI.getActionBarDrawable(this, FlatUI.GRASS, false));
         compclues = getIntent().getIntExtra(ScreenSlideActivity.CLUES_COMP,5);
         TextView clues = (TextView)findViewById(R.id.clues_found);
         clues.setText(getResources().getText(R.string.clues_found_completion)+" "+compclues+"/"+compclues );

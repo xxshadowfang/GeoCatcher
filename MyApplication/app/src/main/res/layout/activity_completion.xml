@@ -1,6 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:andorid="http://schemas.android.com/apk/res-auto"
+    xmlns:flatui="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -9,9 +9,11 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="barnes.fahsl.geocatcher.CompletionActivity"
     android:orientation="vertical"
-    android:background="@color/bg_color">
+    android:background="@color/grass_dark">
 
-    <TextView
+    <com.cengalabs.flatui.views.FlatTextView
+        flatui:fl_textColor="fl_light"
+        flatui:fl_theme="@array/grass"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -31,7 +33,9 @@
         <!--android:textIsSelectable="false"-->
         <!--android:layout_marginTop="40dp" />-->
 
-    <TextView
+    <com.cengalabs.flatui.views.FlatTextView
+        flatui:fl_textColor="fl_light"
+        flatui:fl_theme="@array/grass"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
@@ -40,7 +44,9 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="25dp" />
 
-    <Button
+    <com.cengalabs.flatui.views.FlatButton
+        flatui:fl_textColor="fl_light"
+        flatui:fl_theme="@array/grass"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/return_to_menu_completion"

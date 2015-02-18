@@ -11,6 +11,9 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.cengalabs.flatui.FlatUI;
+import com.cengalabs.flatui.views.FlatRadioButton;
+
 import java.util.ArrayList;
 
 
@@ -20,16 +23,19 @@ public class MyHuntsActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_hunts);
-
+        getSupportActionBar().setBackgroundDrawable(FlatUI.getActionBarDrawable(this, FlatUI.GRASS, false));
         HuntDataAdapter hda = new HuntDataAdapter(this);
         hda.open();
         ArrayList <String> names = hda.getAllHuntNames();
         //Toast.makeText(this, "Null? "+(names == null), Toast.LENGTH_SHORT).show();
 
         myGroup = (RadioGroup)findViewById(R.id.all_hunts_radio_group);
-        RadioButton button;
+        FlatRadioButton button;
+
         for (int i = 0; i < names.size(); i++) {
-            button = new RadioButton(this);
+            button = new FlatRadioButton(this);
+            button.setTextColor(getResources().getColor(R.color.grass_light));
+
             button.setText(names.get(i));
             myGroup.addView(button);
         }

@@ -1,10 +1,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    xmlns:flatui="http://schemas.android.com/apk/res-auto"
     android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    android:background="@color/bg_color"
+    android:background="@color/grass_dark"
     tools:context="barnes.fahsl.geocatcher.MyHuntsActivity">
 
     <LinearLayout
@@ -14,15 +15,19 @@
         android:layout_centerHorizontal="true"
         android:orientation="vertical">
 
-        <TextView
+        <com.cengalabs.flatui.views.FlatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="54sp"
+
             android:text="@string/my_hunts_title"
             android:layout_gravity="center"
             android:id="@+id/myHuntsTitle"
             android:layout_marginTop="36dp"
-            android:layout_marginBottom="24dp"/>
+            android:layout_marginBottom="24dp"
+           flatui:fl_theme = "@array/grass"
+            android:textStyle="bold"
+            flatui:fl_textColor="fl_main"/>
 
         <ScrollView
             android:layout_width="fill_parent"
@@ -34,38 +39,46 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:id="@+id/all_hunts_radio_group">
+                android:id="@+id/all_hunts_radio_group"
+
+                >
 
             </RadioGroup>
         </ScrollView>
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-        <Button
-            android:layout_width="0dp"
-            android:layout_weight="1"
+
+        <com.cengalabs.flatui.views.FlatButton
+            flatui:fl_theme = "@array/grass"
+            flatui:fl_textColor="fl_main"
+            android:layout_width="match_parent"
+
+            android:layout_marginTop="70dp"
             android:layout_height="wrap_content"
             android:text="@string/start_hunt_button_text"
             android:id="@+id/startHuntButton"
             android:layout_gravity="center_horizontal" />
 
-        <Button
-            android:layout_width="0dp"
-            android:layout_weight="1"
+        <com.cengalabs.flatui.views.FlatButton
+            flatui:fl_theme = "@array/grass"
+            flatui:fl_textColor="fl_main"
+            android:layout_width="match_parent"
+
+            android:layout_marginTop="30dp"
             android:layout_height="wrap_content"
             android:text="@string/edit_hunt"
             android:id="@+id/edit_hunt_button"
             android:layout_gravity="center_horizontal" />
-        <Button
-            android:layout_width="0dp"
-            android:layout_weight="1"
+        <com.cengalabs.flatui.views.FlatButton
+            flatui:fl_theme = "@array/grass"
+            flatui:fl_textColor="fl_main"
+            android:layout_width="match_parent"
+            android:layout_marginTop="30dp"
+
             android:layout_height="wrap_content"
             android:text="@string/exit_button_text"
             android:id="@+id/exitButton"
             android:layout_gravity="center_horizontal" />
 
-        </LinearLayout>
+
     </LinearLayout>
 
 </RelativeLayout>

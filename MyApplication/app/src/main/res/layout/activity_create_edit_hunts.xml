@@ -1,60 +1,75 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    xmlns:flatui="http://schemas.android.com/apk/res-auto"
     android:layout_height="fill_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    android:background="@color/bg_color"
+    android:background="@color/grass_dark"
     android:orientation="vertical"
-    tools:context="barnes.fahsl.geocatcher.CreateEditHuntsActivity">
+    tools:context="barnes.fahsl.geocatcher.CreateEditHuntsActivity"
+    >
 <LinearLayout
     android:layout_height="match_parent"
     android:layout_width="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/grass_dark">
 
 
-    <TextView
+    <com.cengalabs.flatui.views.FlatTextView
+        flatui:fl_textColor="fl_main"
+        flatui:fl_theme="@array/grass"
+        android:textStyle="bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="36sp"
         android:text="@string/checkpoints_title"
         android:gravity="clip_horizontal|center|clip_vertical"
         android:id="@+id/scavenger_hunt_checkpoints_title"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="15dp"
         android:layout_marginBottom="24dp"
-        android:textAppearance="@android:color/black"
-        android:typeface="normal" />
+ />
 
     <Spinner
+        android:textColor = "@color/grass_light"
         android:id="@+id/checkpointsSpinner"
-        android:layout_width="137dp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:prompt="@string/checkpoints"
         android:entries="@array/sample_checkpoints"
-        android:layout_marginRight="24dp"
-        android:layout_gravity="center_horizontal">
+        android:layout_marginBottom="15dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/grass_primary"
+        >
 
     </Spinner>
 
 
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-
-            android:inputType="textMultiLine"
-            android:ems="10"
-            android:id="@+id/hint_text_box"
-            android:hint="@string/checkpoint_hint"
-            android:layout_gravity="center_horizontal" />
+    <com.cengalabs.flatui.views.FlatEditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        flatui:fl_textColor="fl_light"
+        flatui:fl_theme="@array/grass"
+        flatui:fl_fieldStyle="fl_box"
+        android:inputType="textMultiLine"
+        android:ems="10"
+        android:id="@+id/hint_text_box"
+        android:hint="@string/checkpoint_hint"
+        android:layout_gravity="center_horizontal" />
 
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:id = "@+id/clue_image_view"
         android:layout_gravity="center_horizontal"/>
-    <Button
+    <com.cengalabs.flatui.views.FlatButton
+
+        flatui:fl_textColor="fl_light"
+        flatui:fl_theme="@array/grass"
+        android:layout_margin="15dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/record_location_button_text"
@@ -64,12 +79,17 @@
     <LinearLayout
         android:layout_marginLeft="24dp"
         android:layout_marginRight="24dp"
+
+        android:layout_marginBottom="15dp"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical">
 
-        <Button
+        <com.cengalabs.flatui.views.FlatButton
+            flatui:fl_textColor="fl_light"
+            flatui:fl_theme="@array/grass"
+
             android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -77,7 +97,10 @@
             android:id="@+id/takePictureButton"
             android:layout_gravity="center_horizontal" />
 
-        <Button
+        <com.cengalabs.flatui.views.FlatButton
+            flatui:fl_textColor="fl_light"
+            flatui:fl_theme="@array/grass"
+            android:layout_margin="15dp"
             android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -87,16 +110,22 @@
 
     </LinearLayout>
 
-    <Button
+    <com.cengalabs.flatui.views.FlatButton
+        flatui:fl_textColor="fl_light"
+        flatui:fl_theme="@array/grass"
+        android:layout_margin="15dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/save_checkpoint_button_text"
         android:id="@+id/saveCheckpointButton"
         android:layout_gravity="center_horizontal" />
 
-    <Button
-        android:background="@color/primary_dark_material_dark"
-        android:textColor="@color/button_material_light"
+    <com.cengalabs.flatui.views.FlatButton
+        flatui:fl_textColor="fl_light"
+        flatui:fl_theme="@array/grass"
+        android:background="@color/grass_darker"
+        android:layout_margin="15dp"
+
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/finish_button_text"

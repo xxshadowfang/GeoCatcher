@@ -28,6 +28,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.content.CursorLoader;
+import com.cengalabs.flatui.FlatUI;
+import com.cengalabs.flatui.views.FlatButton;
+import com.cengalabs.flatui.views.FlatEditText;
 
 import java.util.ArrayList;
 
@@ -53,6 +56,9 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_edit_hunts);
+        FlatUI.initDefaultValues(this);
+        FlatUI.setDefaultTheme(FlatUI.GRASS);
+        getSupportActionBar().setBackgroundDrawable(FlatUI.getActionBarDrawable(this,FlatUI.GRASS,false));
 
         hda = new HuntDataAdapter(this);
         hda.open();
@@ -75,7 +81,9 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
             array[checkpoints.size()] = "New Checkpoint";
         }
 
+
         arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, array);
+
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         checkpointSpinner.setAdapter(arrayAdapter);
         checkpointSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -115,7 +123,7 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
         };
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 0, locationListener);
 
-        Button takePic = (Button)findViewById(R.id.takePictureButton);
+        FlatButton takePic = (FlatButton)findViewById(R.id.takePictureButton);
         imgFavorite = (ImageView)findViewById(R.id.clue_image_view);
         takePic.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,15 +131,15 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
                 openCamera();
             }
         });
-        Button returnButton = (Button)findViewById(R.id.finishButton);
-        returnButton.setOnClickListener(new View.OnClickListener() {
+        FlatButton returnFlatButton = (FlatButton)findViewById(R.id.finishButton);
+        returnFlatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showFinish();
             }
         });
-        Button recordLocButton = (Button)findViewById(R.id.recordLocationButton);
-        recordLocButton.setOnClickListener(new View.OnClickListener() {
+        FlatButton recordLocFlatButton = (FlatButton)findViewById(R.id.recordLocationButton);
+        recordLocFlatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (currentLat == 5000 && currentLong == 5000 ) {
@@ -142,8 +150,8 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
                 Toast.makeText(getApplicationContext(),getString(R.string.successful_location),Toast.LENGTH_SHORT).show();
             }
         });
-        Button saveCheckpointButton = (Button)findViewById(R.id.saveCheckpointButton);
-        saveCheckpointButton.setOnClickListener(new View.OnClickListener() {
+        FlatButton saveCheckpointFlatButton = (FlatButton)findViewById(R.id.saveCheckpointButton);
+        saveCheckpointFlatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (recordedLoc == null) {
@@ -155,7 +163,7 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
                 String selectedCheckpointText = ((TextView)checkpointSpinner.getSelectedView()).getText().toString();
                 if (selectedCheckpointText.equals("New Checkpoint")) {
                     Checkpoint newCheckpoint = new Checkpoint(recordedLoc, checkpoints.size() + 1);
-                    String text = ((EditText) (CreateEditHuntsActivity.this.findViewById(R.id.hint_text_box))).getText().toString();
+                    String text = ((FlatEditText) (CreateEditHuntsActivity.this.findViewById(R.id.hint_text_box))).getText().toString();
                     newCheckpoint.setClue(text, null, null, null);
                     newCheckpoint.getClue().setImage(img);
                     checkpoints.add(newCheckpoint);
@@ -182,14 +190,14 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
 //        Log.d("FAHSL", "Pos: " + position);
 //        Log.d("FAHSL", "Size: "+checkpoints.size());
         if (position >= checkpoints.size()) {
-            ((EditText)findViewById(R.id.hint_text_box)).setText("");
+            ((FlatEditText)findViewById(R.id.hint_text_box)).setText("");
             ((ImageView)findViewById(R.id.clue_image_view)).setImageResource(android.R.color.transparent);
             recordedLoc = null;
             img = null;
             return;
         }
         Checkpoint currentCheckpoint = checkpoints.get(position);
-        ((EditText)findViewById(R.id.hint_text_box)).setText(currentCheckpoint.getClue().getText());
+        ((FlatEditText)findViewById(R.id.hint_text_box)).setText(currentCheckpoint.getClue().getText());
         ((ImageView)findViewById(R.id.clue_image_view)).setImageBitmap(currentCheckpoint.getClue().getImage());
         recordedLoc = currentCheckpoint.getLocation();
     }
