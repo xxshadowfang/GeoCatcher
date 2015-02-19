@@ -2,6 +2,8 @@ package barnes.fahsl.geocatcher;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.location.Location;
@@ -40,11 +42,13 @@ public class ScreenSlideFragments extends Fragment {
     private TextView longView;
     private LocationManager locationManager;
     private LocationListener locationListener;
+    private Checkpoint checkpoint;
     //public static final String HAS_HINT_TEXT = "HASHinttext";
     public static ScreenSlideFragments create(Checkpoint checkpoint) {
         ScreenSlideFragments fragment = new ScreenSlideFragments();
+        fragment.setCheckpoint(checkpoint);
         Bundle args = new Bundle();
-        boolean isImg = checkpoint.getClue().getImage()!=null;
+        boolean isImg = checkpoint.getClue().getImageURL()!=null;
         args.putBoolean(HAS_BIT_MAP,isImg);
         args.putBoolean(IS_REVEALED,checkpoint.hasBeenReached());
 
@@ -52,7 +56,6 @@ public class ScreenSlideFragments extends Fragment {
             args.putDouble(LAT_STAT,checkpoint.getLocation().getLatitude());
 
         args.putCharArray(HINT_TEXT, checkpoint.getClue().getText().toCharArray());
-
         if(isImg) {
             Bitmap img = checkpoint.getClue().getImage();
 
@@ -119,6 +122,11 @@ public class ScreenSlideFragments extends Fragment {
     }
     public ScreenSlideFragments() {
     }
+
+    public void setCheckpoint(Checkpoint c) {
+        this.checkpoint = c;
+    }
+
     @Override public void onDestroy(){
         super.onDestroy();
 
@@ -130,11 +138,23 @@ public class ScreenSlideFragments extends Fragment {
         ViewGroup rootView = (ViewGroup) inflater.inflate(
                 R.layout.fragment_screen_slide_fragments, container, false);
 
-        ImageView img =(ImageView)rootView.findViewById(R.id.imageViewIndClue);
+        final ImageView img =(ImageView)rootView.findViewById(R.id.imageViewIndClue);
         latView = (TextView)rootView.findViewById(R.id.locationTextViewFragLat);
         longView = (TextView)rootView.findViewById(R.id.locationTextViewFragLong);
-        if(doesHaveBitMap)
-        img.setImageBitmap(bitMap);
+        if(doesHaveBitMap) {
+            img.setImageResource(R.drawable.refresh_icon);
+            if (bitMap != null)
+                img.setImageBitmap(Bitmap.createScaledBitmap(bitMap,660,960,false));
+            img.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (checkpoint.getClue().getImage() != null)
+                        img.setImageBitmap(Bitmap.createScaledBitmap(checkpoint.getClue().getImage(),660,960,false));
+                }
+            });
+        }
+
+        //Bitmap.createScaledBitmap(bitMap,640,360,false)
         TextView hint  = (TextView)rootView.findViewById(R.id.HintViewIndClue);
         hint.setText(hintString);
         if(beenReached){

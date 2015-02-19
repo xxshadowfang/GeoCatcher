@@ -68,7 +68,8 @@
         android:id="@+id/Main_title_text"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        />
 
     <ImageView
         android:layout_width="wrap_content"

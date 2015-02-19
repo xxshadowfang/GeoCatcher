@@ -35,7 +35,7 @@ public class MyHuntsActivity extends ActionBarActivity {
         for (int i = 0; i < names.size(); i++) {
             button = new FlatRadioButton(this);
             button.setTextColor(getResources().getColor(R.color.grass_light));
-
+            button.setTextSize(30);
             button.setText(names.get(i));
             myGroup.addView(button);
         }
