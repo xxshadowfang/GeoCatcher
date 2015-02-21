@@ -80,7 +80,11 @@ public class HuntDataAdapter {
     }
 
     public void executeStatement(String query) {
-        //mDatabase.rawQuery(query, null);
+        mDatabase.rawQuery(query, null);
+    }
+
+    private void generateStringForHunt(String huntName) {
+        //String query = "insert into hunts.db ("+
     }
 
     public void addHunt(ScavengerHunt hunt) {

@@ -12,6 +12,7 @@ import android.location.*;
 import android.location.Location;
 import android.media.MediaRecorder;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -36,6 +37,7 @@ import com.cengalabs.flatui.views.FlatEditText;
 import android.media.MediaPlayer;
 
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -58,7 +60,7 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
     private boolean isNew;
 
     private static final String LOG_TAG = "AudioRecordTest";
-    private static String mFileName = null;
+    private static String mFileName ;
 
     private RecordButton mRecordButton = null;
     private MediaRecorder mRecorder = null;
@@ -69,6 +71,12 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_edit_hunts);
+        try{
+            mFileName = getDataDir(this);
+        }
+        catch(Exception e){
+            Log.d("file","getDir failed" );
+        }
         FlatUI.initDefaultValues(this);
         FlatUI.setDefaultTheme(FlatUI.GRASS);
         getSupportActionBar().setBackgroundDrawable(FlatUI.getActionBarDrawable(this,FlatUI.GRASS,false));
@@ -112,7 +120,14 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
             }
         });
 
+
+
         LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+
+
+
+
+
         LocationListener locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
@@ -135,10 +150,16 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
 
             }
         };
+
+
+
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 0, locationListener);
 
+
+        
+
         final FlatButton recordSound = (FlatButton)findViewById(R.id.recordSoundButton);
-        recordSound.setEnabled(false);
+        //recordSound.setEnabled(false);
         recordSound.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -208,6 +229,9 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
                     String text = ((EditText) (CreateEditHuntsActivity.this.findViewById(R.id.hint_text_box))).getText().toString();
                     editCheckpoint.setClue(text, null, null, null);
                     editCheckpoint.getClue().setImage(img);
+                    File soundFile = new File(mFileName);
+
+                    editCheckpoint.getClue().setSound(soundFile);
                 }
             }
         });
@@ -390,15 +414,22 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
 
     private void startRecording() {
         mRecorder = new MediaRecorder();
-        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        mRecorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);
+        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+        try{
+            mFileName = getDataDir(this);
+        }
+        catch(Exception e){
+            Log.d("file","getDir failed" );
+        }
         mRecorder.setOutputFile(mFileName);
-        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+
 
         try {
             mRecorder.prepare();
         } catch (IOException e) {
-            Log.e(LOG_TAG, "prepare() failed");
+            Log.e(LOG_TAG, mFileName);
         }
 
         mRecorder.start();
@@ -408,6 +439,7 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
         mRecorder.stop();
         mRecorder.release();
         mRecorder = null;
+
     }
     private void onRecord(boolean start) {
         if (start) {
@@ -415,6 +447,15 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
         } else {
             stopRecording();
         }
+    }
+    public String getDataDir(Context context) throws Exception
+    {
+        return Environment.getExternalStorageDirectory().getAbsolutePath()
+                + File.separator
+                + Environment.DIRECTORY_DCIM
+
+                + File.separator
+                + System.currentTimeMillis() + ".mp4";
     }
 
 }
