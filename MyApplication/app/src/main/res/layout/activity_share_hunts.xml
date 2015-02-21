@@ -66,24 +66,24 @@
         android:layout_gravity="center"
         android:layout_marginBottom="50dp">
 
-        <com.cengalabs.flatui.views.FlatTextView
-            flatui:fl_textColor="fl_light"
-            flatui:fl_theme="@array/grass"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/receiveAHuntText"
-            android:text="@string/receive_a_hunt_message"
-            android:layout_marginRight="24dp"
-            android:textSize="24dp"/>
+        <!--<com.cengalabs.flatui.views.FlatTextView-->
+            <!--flatui:fl_textColor="fl_light"-->
+            <!--flatui:fl_theme="@array/grass"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:id="@+id/receiveAHuntText"-->
+            <!--android:text="@string/receive_a_hunt_message"-->
+            <!--android:layout_marginRight="24dp"-->
+            <!--android:textSize="24dp"/>-->
 
-        <com.cengalabs.flatui.views.FlatButton
-            flatui:fl_textColor="fl_light"
-            flatui:fl_theme="@array/grass"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/receiveButton"
-            android:text="@string/receive_a_hunt_button_text"
-            android:entries="@array/sample_hunts" />
+        <!--<com.cengalabs.flatui.views.FlatButton-->
+            <!--flatui:fl_textColor="fl_light"-->
+            <!--flatui:fl_theme="@array/grass"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:id="@+id/receiveButton"-->
+            <!--android:text="@string/receive_a_hunt_button_text"-->
+            <!--android:entries="@array/sample_hunts" />-->
 
     </LinearLayout>
 
