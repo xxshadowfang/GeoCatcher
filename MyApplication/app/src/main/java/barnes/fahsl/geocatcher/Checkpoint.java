@@ -112,6 +112,9 @@ public class Checkpoint {
         public void setSound(File file){
             this.soundFile =file;
         }
+        public File getSound(){
+            return this.soundFile;
+        }
     }
 }
 

@@ -143,11 +143,16 @@ public class HuntDataAdapter {
         int counter = 0;
         for (Checkpoint p : hunt.getCheckpoints()) {
             boolean needsAssignment = false;
+            boolean needsSoundAssignment = false;
             if (p.getClue().getImage() != null && p.getClue().getImageURL() == null) {
                 Log.d("FAHSL", "Has image, assigning URL");
                 needsAssignment = true;
             }
-            new AddCheckpointTask().execute(p, needsAssignment, hunt.getName(), counter);
+            if (p.getClue().getSound() != null && p.getClue().getSoundURL() == null) {
+                Log.d("FAHSL", "Has sound, assigning URL");
+                needsAssignment = true;
+            }
+            new AddCheckpointTask().execute(p, needsAssignment,needsSoundAssignment, hunt.getName(), counter);
             counter++;
         }
     }
@@ -161,12 +166,16 @@ public class HuntDataAdapter {
         protected Void doInBackground(Object... params) {
             check = (Checkpoint)params[0];
             boolean assign = (Boolean)params[1];
-            name = (String)params[2];
-            int counter = (Integer)params[3];
+            boolean assignSound = (Boolean)params[2];
+            name = (String)params[4];
+            int counter = (Integer)params[4];
             if (assign) {
                 assignURLToBMP(check, counter);
             } else {
                 // dont do image stuff
+            }
+            if(assignSound){
+                assignURLToMPEG(check,counter);
             }
             return null;
         }
