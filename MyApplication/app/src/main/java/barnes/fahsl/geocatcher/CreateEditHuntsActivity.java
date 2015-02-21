@@ -10,7 +10,9 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.location.*;
 import android.location.Location;
+import android.media.MediaRecorder;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -24,6 +26,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,7 +34,11 @@ import android.content.CursorLoader;
 import com.cengalabs.flatui.FlatUI;
 import com.cengalabs.flatui.views.FlatButton;
 import com.cengalabs.flatui.views.FlatEditText;
+import android.media.MediaPlayer;
 
+
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 
@@ -52,14 +59,29 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
 
     private boolean isNew;
 
+    private static final String LOG_TAG = "AudioRecordTest";
+    private static String mFileName ;
+
+    private RecordButton mRecordButton = null;
+    private MediaRecorder mRecorder = null;
+
+    private PlayButton   mPlayButton = null;
+    private MediaPlayer   mPlayer = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_edit_hunts);
+        try{
+            mFileName = getDataDir(this);
+        }
+        catch(Exception e){
+            Log.d("file","getDir failed" );
+        }
         FlatUI.initDefaultValues(this);
         FlatUI.setDefaultTheme(FlatUI.GRASS);
         getSupportActionBar().setBackgroundDrawable(FlatUI.getActionBarDrawable(this,FlatUI.GRASS,false));
-
+        mRecordButton = new RecordButton(this);
+        mPlayButton = new PlayButton(this);
         hda = new HuntDataAdapter(this);
         hda.open();
         Spinner checkpointSpinner = (Spinner)findViewById(R.id.checkpointsSpinner);
@@ -98,7 +120,14 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
             }
         });
 
+
+
         LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+
+
+
+
+
         LocationListener locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
@@ -121,10 +150,26 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
 
             }
         };
+
+
+
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 0, locationListener);
 
-        FlatButton recordSound = (FlatButton)findViewById(R.id.recordSoundButton);
-        recordSound.setEnabled(false);
+
+        
+
+        final FlatButton recordSound = (FlatButton)findViewById(R.id.recordSoundButton);
+        //recordSound.setEnabled(false);
+        recordSound.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                recordSound.setVisibility(Button.INVISIBLE);
+                LinearLayout recLayout = (LinearLayout)findViewById(R.id.SoundLayout);
+                recLayout.addView(mRecordButton);
+                recLayout.addView(mPlayButton);
+
+            }
+        });
 
         FlatButton takePic = (FlatButton)findViewById(R.id.takePictureButton);
         imgFavorite = (ImageView)findViewById(R.id.clue_image_view);
@@ -188,6 +233,9 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
                     text = text.replace(";", "");
                     editCheckpoint.setClue(text, null, null, null);
                     editCheckpoint.getClue().setImage(img);
+                    File soundFile = new File(mFileName);
+
+                    editCheckpoint.getClue().setSound(soundFile);
                 }
             }
         });
@@ -294,4 +342,126 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
             imgFavorite.setImageBitmap(img);
         }
     }
+    class RecordButton extends FlatButton {
+        boolean mStartRecording = true;
+
+        @Override
+        public void setTextColor(int color) {
+            super.setTextColor(color);
+        }
+
+        @Override
+        public void setBackgroundColor(int color) {
+            super.setBackgroundColor(color);
+        }
+
+
+        OnClickListener clicker = new OnClickListener() {
+            public void onClick(View v) {
+                onRecord(mStartRecording);
+                if (mStartRecording) {
+                    setText("Stop recording");
+                } else {
+                    setText("Start recording");
+                }
+                mStartRecording = !mStartRecording;
+            }
+        };
+
+        public RecordButton(Context ctx) {
+            super(ctx);
+            setText("Start recording");
+            setOnClickListener(clicker);
+        }
+    }
+
+    class PlayButton extends FlatButton {
+        boolean mStartPlaying = true;
+
+        OnClickListener clicker = new OnClickListener() {
+            public void onClick(View v) {
+                onPlay(mStartPlaying);
+                if (mStartPlaying) {
+                    setText("Stop playing");
+                } else {
+                    setText("Start playing");
+                }
+                mStartPlaying = !mStartPlaying;
+            }
+        };
+
+        public PlayButton(Context ctx) {
+            super(ctx);
+            setText("Start playing");
+            setOnClickListener(clicker);
+        }
+    }
+    private void startPlaying() {
+        mPlayer = new MediaPlayer();
+        try {
+            mPlayer.setDataSource(mFileName);
+            mPlayer.prepare();
+            mPlayer.start();
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "prepare() failed");
+        }
+    }
+    private void onPlay(boolean start) {
+        if (start) {
+            startPlaying();
+        } else {
+            stopPlaying();
+        }
+    }
+    private void stopPlaying() {
+        mPlayer.release();
+        mPlayer = null;
+    }
+
+    private void startRecording() {
+        mRecorder = new MediaRecorder();
+        mRecorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);
+        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+        try{
+            mFileName = getDataDir(this);
+        }
+        catch(Exception e){
+            Log.d("file","getDir failed" );
+        }
+        mRecorder.setOutputFile(mFileName);
+        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+
+
+        try {
+            mRecorder.prepare();
+        } catch (IOException e) {
+            Log.e(LOG_TAG, mFileName);
+        }
+
+        mRecorder.start();
+    }
+
+    private void stopRecording() {
+        mRecorder.stop();
+        mRecorder.release();
+        mRecorder = null;
+
+    }
+    private void onRecord(boolean start) {
+        if (start) {
+            startRecording();
+        } else {
+            stopRecording();
+        }
+    }
+    public String getDataDir(Context context) throws Exception
+    {
+        return Environment.getExternalStorageDirectory().getAbsolutePath()
+                + File.separator
+                + Environment.DIRECTORY_DCIM
+
+                + File.separator
+                + System.currentTimeMillis() + ".mp4";
+    }
+
 }

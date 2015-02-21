@@ -3,6 +3,8 @@ package barnes.fahsl.geocatcher;
 import android.graphics.Bitmap;
 import android.net.Uri;
 
+import java.io.File;
+
 /**
  * Created by fahslaj on 2/7/2015.
  */
@@ -70,12 +72,14 @@ public class Checkpoint {
         private String soundURL;
         private String videoURL;
         private Bitmap image;
+        private File soundFile;
 
         public Clue(String text, String imageURL, String soundURL, String videoURL) {
             this.text = text;
             this.imageURL = imageURL;
             this.soundURL = soundURL;
             this.videoURL = videoURL;
+
         }
 
         public String getText() {
@@ -104,6 +108,9 @@ public class Checkpoint {
 
         public void setImage(Bitmap bmp) {
             this.image = bmp;
+        }
+        public void setSound(File file){
+            this.soundFile =file;
         }
     }
 }

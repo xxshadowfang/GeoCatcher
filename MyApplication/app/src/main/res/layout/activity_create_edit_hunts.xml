@@ -97,6 +97,12 @@
             android:id="@+id/takePictureButton"
             android:layout_gravity="center_horizontal" />
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id = "@+id/SoundLayout"
+            android:orientation="vertical"
+            android:layout_gravity="center_horizontal">
         <com.cengalabs.flatui.views.FlatButton
             flatui:fl_textColor="fl_light"
             flatui:fl_theme="@array/grass"
@@ -107,6 +113,9 @@
             android:text="@string/record_sound_button_text"
             android:id="@+id/recordSoundButton"
             android:layout_gravity="center_horizontal"/>
+
+
+        </LinearLayout>
 
     </LinearLayout>
 

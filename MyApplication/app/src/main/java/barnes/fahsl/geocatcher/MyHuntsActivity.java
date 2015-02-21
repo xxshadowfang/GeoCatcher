@@ -46,7 +46,7 @@ public class MyHuntsActivity extends ActionBarActivity {
             }
         } else {
             TextView headerText = (TextView)findViewById(R.id.myHuntsTitle);
-            headerText.setText(getString(R.string.no_hunts_message));
+            //headerText.setText(getString(R.string.no_hunts_message));
             startButton.setEnabled(false);
             editButton.setEnabled(false);
         }

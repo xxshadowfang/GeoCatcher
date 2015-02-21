@@ -57,6 +57,7 @@
     <string name="edit_hunt">Edit Hunt</string>
     <string name="update_location">Update Your Location</string>
     <string name="successful_location">Successfully Recorded Location</string>
+    <string name="play_sound_button_text">Play recording</string>
     <string name="no_hunts_message">No Hunts</string>
     <string name="hold_devices_message">Hold your devices back-to-back to activate NFC sharing.</string>
     <string name="received_hunt_message">"Received a Hunt!"</string>
