@@ -159,7 +159,7 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
 
 
         final FlatButton recordSound = (FlatButton)findViewById(R.id.recordSoundButton);
-        //recordSound.setEnabled(false);
+        recordSound.setEnabled(false);
         recordSound.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
