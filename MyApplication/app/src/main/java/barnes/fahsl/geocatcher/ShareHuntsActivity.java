@@ -36,6 +36,7 @@ public class ShareHuntsActivity extends ActionBarActivity implements NfcAdapter.
     private ArrayAdapter<String> arrayAdapter;
     private ScavengerHunt shareHunt;
     private String huntName;
+    HuntDataAdapter hda;
     NfcAdapter nfcAdapter;
 
     @Override
@@ -48,7 +49,6 @@ public class ShareHuntsActivity extends ActionBarActivity implements NfcAdapter.
         ArrayList<String> names = hda.getAllHuntNames();
         Spinner huntNames = (Spinner)findViewById(R.id.shareHuntsSelectHuntSpinner);
 
-        hda.close();
         if (names != null) {
             String[] huntArray = new String[names.size()];
             for (int i = 0; i < huntArray.length; i++)
@@ -97,6 +97,8 @@ public class ShareHuntsActivity extends ActionBarActivity implements NfcAdapter.
     @Override
     protected void onResume() {
         super.onResume();
+        hda = new HuntDataAdapter(this);
+        hda.open();
         Intent intent = getIntent();
         String action = intent.getAction();
         if(action != null && action.equals(NfcAdapter.ACTION_NDEF_DISCOVERED)) {
@@ -108,15 +110,14 @@ public class ShareHuntsActivity extends ActionBarActivity implements NfcAdapter.
             NdefRecord NdefRecord_0 = inNdefRecords[0];
             String inMsg = new String(NdefRecord_0.getPayload());
             Toast.makeText(this, getString(R.string.received_hunt_message), Toast.LENGTH_LONG).show();
-            HuntDataAdapter hda = new HuntDataAdapter(this);
-            hda.open();
-            hda.executeStatement(inMsg);
-            hda.close();
+            Log.d("FAHSL", inMsg);
+            hda.executeStatements(inMsg);
         }
     }
     @Override
     protected void onPause() {
         super.onPause();
+        hda.close();
     }
 
     @Override
@@ -144,7 +145,7 @@ public class ShareHuntsActivity extends ActionBarActivity implements NfcAdapter.
 
     @Override
     public NdefMessage createNdefMessage(NfcEvent event) {
-        byte[] bytes = huntName.getBytes();
+        byte[] bytes = hda.generateStringForHunt(huntName).getBytes();
         NdefRecord ndefRecordOut = new NdefRecord(NdefRecord.TNF_MIME_MEDIA, "text/plain".getBytes(), new byte[] {}, bytes);
         NdefMessage nDefMessageOut = new NdefMessage(ndefRecordOut);
         return nDefMessageOut;

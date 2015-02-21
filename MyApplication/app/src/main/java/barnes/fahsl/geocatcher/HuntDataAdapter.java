@@ -18,6 +18,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -79,12 +80,62 @@ public class HuntDataAdapter {
         return names;
     }
 
-    public void executeStatement(String query) {
-        mDatabase.rawQuery(query, null);
+    public void executeStatements(String stringy) {
+        String[] checkReps = stringy.split("\\|");
+        String name = "";
+        ArrayList<Checkpoint> checks = new ArrayList<Checkpoint>();
+        for (String q : checkReps)
+            Log.d("FAHSL", q);
+        for (int i = 0; i < checkReps.length; i++) {
+            String s = checkReps[i];
+            if (i != 0) {
+                String[] params = s.split(";");
+                int checkNo = Integer.parseInt(params[0]);
+                boolean reached = params[1].equals("1");
+                double lat = Double.parseDouble(params[2]);
+                double lon = Double.parseDouble(params[3]);
+                String text = params[4];
+                String imageURL = params[5].equals("null")?null:params[5];
+                String soundURL = params[6].equals("null")?null:params[6];
+                String videoURL = params[7].equals("null")?null:params[7];
+                Checkpoint newCheck = new Checkpoint(new Location(lat, lon), checkNo);
+                newCheck.setReached(reached);
+                newCheck.setClue(text, imageURL, soundURL, videoURL);
+                checks.add(newCheck);
+            } else {
+                name = s;
+            }
+        }
+        ScavengerHunt newHunt = new ScavengerHunt(name, checks);
+        this.addHunt(newHunt);
     }
 
-    private void generateStringForHunt(String huntName) {
-        //String query = "insert into hunts.db ("+
+    public String generateStringForHunt(String huntName) {
+        String query = "";
+        ScavengerHunt huntToSend = getHuntByName(huntName);
+        query+= huntToSend.getName()+"|";
+        for (int i = 0; i < huntToSend.getCheckpoints().size(); i++) {
+            Checkpoint check = huntToSend.getCheckpoints().get(i);
+            query+=check.getCheckNo()+";"+check.hasBeenReached()+";"+check.getLocation().getLatitude()+";";
+            query+=check.getLocation().getLongitude()+";"+check.getClue().getText()+";"+check.getClue().getImageURL()+";";
+            query+=check.getClue().getSoundURL()+";"+check.getClue().getVideoURL();
+
+            if (i != huntToSend.getCheckpoints().size()-1) {
+                query += "|";
+            }
+//            tried sending raw query, didn't work. (We know, it was a terribly insecure way!)
+//            query += "INSERT INTO " + CHECKPOINT_CLUES_TABLE_NAME + " (";
+//            query += KEY_HUNT_NAME + "," + KEY_CC_NO + "," + KEY_CHECK_REACHED + ",";
+//            query += KEY_CHECK_LAT + "," + KEY_CHECK_LONG + "," + KEY_CLUE_TEXT + ",";
+//            query += KEY_CLUE_PIC + "," + KEY_CLUE_SOUND + "," + KEY_CLUE_VIDEO + ") ";
+//            query += "VALUES ('";
+//            query += huntToSend.getName() + "',";
+//            query += check.getCheckNo()+","+(check.hasBeenReached()?"1":"0")+",";
+//            query += check.getLocation().getLatitude()+","+check.getLocation().getLongitude()+",";
+//            query += "'"+check.getClue().getText()+"','"+check.getClue().getImageURL()+"','";
+//            query += check.getClue().getSoundURL()+"','"+check.getClue().getVideoURL()+"')";
+        }
+        return query;
     }
 
     public void addHunt(ScavengerHunt hunt) {

@@ -167,6 +167,8 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
                 if (selectedCheckpointText.equals("New Checkpoint")) {
                     Checkpoint newCheckpoint = new Checkpoint(recordedLoc, checkpoints.size() + 1);
                     String text = ((FlatEditText) (CreateEditHuntsActivity.this.findViewById(R.id.hint_text_box))).getText().toString();
+                    text = text.replace("|", "");
+                    text = text.replace(";", "");
                     newCheckpoint.setClue(text, null, null, null);
                     newCheckpoint.getClue().setImage(img);
                     checkpoints.add(newCheckpoint);
@@ -182,6 +184,8 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
                     Checkpoint editCheckpoint = checkpoints.get(selectedCheckpointIndex);
                     editCheckpoint.setLocation(recordedLoc);
                     String text = ((EditText) (CreateEditHuntsActivity.this.findViewById(R.id.hint_text_box))).getText().toString();
+                    text = text.replace("|", "");
+                    text = text.replace(";", "");
                     editCheckpoint.setClue(text, null, null, null);
                     editCheckpoint.getClue().setImage(img);
                 }
@@ -220,6 +224,8 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         name =input.getText().toString();
+                        name.replace("|", "");
+                        name.replace(";", "");
                         if (isNew) {
                             ScavengerHunt newHunt = new ScavengerHunt(name, checkpoints);
                             hda.addHunt(newHunt);
