@@ -123,6 +123,9 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
         };
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 0, locationListener);
 
+        FlatButton recordSound = (FlatButton)findViewById(R.id.recordSoundButton);
+        recordSound.setEnabled(false);
+
         FlatButton takePic = (FlatButton)findViewById(R.id.takePictureButton);
         imgFavorite = (ImageView)findViewById(R.id.clue_image_view);
         takePic.setOnClickListener(new View.OnClickListener() {
@@ -280,7 +283,9 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        img = (Bitmap) data.getExtras().get("data");
-        imgFavorite.setImageBitmap(img);
+        if (data.hasExtra("data")) {
+            img = (Bitmap) data.getExtras().get("data");
+            imgFavorite.setImageBitmap(img);
+        }
     }
 }

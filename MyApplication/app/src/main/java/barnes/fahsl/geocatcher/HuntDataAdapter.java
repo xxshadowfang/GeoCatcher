@@ -79,6 +79,10 @@ public class HuntDataAdapter {
         return names;
     }
 
+    public void executeStatement(String query) {
+        //mDatabase.rawQuery(query, null);
+    }
+
     public void addHunt(ScavengerHunt hunt) {
 
         int counter = 0;
@@ -112,8 +116,16 @@ public class HuntDataAdapter {
             return null;
         }
 
+        private void assignURLToMPEG(Checkpoint check, int num) {
+            assignURLToFile(check, num, ".mp4");
+        }
+
         private void assignURLToBMP(Checkpoint check, int num) {
-            String filename = name+""+num+".png";
+            assignURLToFile(check, num, ".png");
+        }
+
+        private void assignURLToFile(Checkpoint check, int num, String fileExtension) {
+            String filename = name+""+num+""+fileExtension;
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             check.getClue().getImage().compress(Bitmap.CompressFormat.PNG, 0, bos);
             ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());

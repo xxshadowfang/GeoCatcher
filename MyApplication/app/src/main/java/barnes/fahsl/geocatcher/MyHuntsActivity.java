@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cengalabs.flatui.FlatUI;
@@ -32,15 +33,24 @@ public class MyHuntsActivity extends ActionBarActivity {
         myGroup = (RadioGroup)findViewById(R.id.all_hunts_radio_group);
         FlatRadioButton button;
 
-        for (int i = 0; i < names.size(); i++) {
-            button = new FlatRadioButton(this);
-            button.setTextColor(getResources().getColor(R.color.grass_light));
-            button.setTextSize(30);
-            button.setText(names.get(i));
-            myGroup.addView(button);
+        Button startButton = (Button)findViewById(R.id.startHuntButton);
+        Button editButton = (Button)findViewById(R.id.edit_hunt_button);
+
+        if (names != null) {
+            for (int i = 0; i < names.size(); i++) {
+                button = new FlatRadioButton(this);
+                button.setTextColor(getResources().getColor(R.color.grass_light));
+                button.setTextSize(30);
+                button.setText(names.get(i));
+                myGroup.addView(button);
+            }
+        } else {
+            TextView headerText = (TextView)findViewById(R.id.myHuntsTitle);
+            headerText.setText(getString(R.string.no_hunts_message));
+            startButton.setEnabled(false);
+            editButton.setEnabled(false);
         }
 
-        Button startButton = (Button)findViewById(R.id.startHuntButton);
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,7 +65,6 @@ public class MyHuntsActivity extends ActionBarActivity {
             }
         });
 
-        Button editButton = (Button)findViewById(R.id.edit_hunt_button);
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

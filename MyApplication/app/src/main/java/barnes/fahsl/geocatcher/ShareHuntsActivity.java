@@ -9,6 +9,11 @@ import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pManager;
+import android.nfc.NdefMessage;
+import android.nfc.NdefRecord;
+import android.nfc.NfcAdapter;
+import android.nfc.NfcEvent;
+import android.os.Parcelable;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,69 +32,57 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ShareHuntsActivity extends ActionBarActivity {
+public class ShareHuntsActivity extends ActionBarActivity implements NfcAdapter.CreateNdefMessageCallback, NfcAdapter.OnNdefPushCompleteCallback {
     private ArrayAdapter<String> arrayAdapter;
     private ScavengerHunt shareHunt;
     private String huntName;
-    WifiP2pManager mManager;
-    WifiP2pManager.Channel mChannel;
-    BroadcastReceiver mReceiver;
-    IntentFilter mIntentFilter;
+    NfcAdapter nfcAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_share_hunts);
         getSupportActionBar().setBackgroundDrawable(FlatUI.getActionBarDrawable(this, FlatUI.GRASS, false));
-        mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
-        mChannel = mManager.initialize(this, getMainLooper(), null);
-        mReceiver = new WifiDirectBroadcastReceiver(mManager, mChannel, this);
-        mIntentFilter = new IntentFilter();
-        mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
-        mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
-        mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
-        mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
         HuntDataAdapter hda = new HuntDataAdapter(this);
         hda.open();
         ArrayList<String> names = hda.getAllHuntNames();
         Spinner huntNames = (Spinner)findViewById(R.id.shareHuntsSelectHuntSpinner);
 
         hda.close();
-        String[] huntArray = new String[names.size()];
-        for (int i = 0; i < huntArray.length; i++)
-            huntArray[i] = names.get(i);
+        if (names != null) {
+            String[] huntArray = new String[names.size()];
+            for (int i = 0; i < huntArray.length; i++)
+                huntArray[i] = names.get(i);
 
-        arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, huntArray);
-        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        huntNames.setAdapter(arrayAdapter);
-        huntNames.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                huntName = arrayAdapter.getItem(position);
-            }
+            arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, huntArray);
+            arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            huntNames.setAdapter(arrayAdapter);
+            huntNames.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    huntName = arrayAdapter.getItem(position);
+                }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
 
-            }
-        });
+                }
+            });
+        }
+
+        nfcAdapter = NfcAdapter.getDefaultAdapter(this);
+        if (nfcAdapter == null) {
+            Toast.makeText(this, "No NFC Adapter Exists", Toast.LENGTH_SHORT).show();
+        } else {
+            nfcAdapter.setNdefPushMessageCallback(this, this);
+            nfcAdapter.setOnNdefPushCompleteCallback(this, this);
+        }
+
         Button myShareButton = (Button)findViewById(R.id.sendButton);
         myShareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener() {
-                    @Override
-                    public void onSuccess() {
-                    Intent intent = new Intent();
-                        intent.setAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
-                        mReceiver.onReceive(getApplicationContext(),intent);
-                        ((WifiDirectBroadcastReceiver)mReceiver).connect();
-                    }
-
-                    @Override
-                    public void onFailure(int reasonCode) {
-
-                    }
-                });
+                Toast.makeText(ShareHuntsActivity.this, getString(R.string.hold_devices_message), Toast.LENGTH_SHORT).show();
             }
         });
         Button myReturnButton = (Button)findViewById(R.id.returnToMenuFromShareButton);
@@ -100,21 +93,35 @@ public class ShareHuntsActivity extends ActionBarActivity {
                 startActivity(launchMainIntent);
             }
         });
-        mIntentFilter = new IntentFilter();
-        mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
-        mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
-        mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
-        mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
     }
     @Override
     protected void onResume() {
         super.onResume();
-        registerReceiver(mReceiver, mIntentFilter);
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        if(action != null && action.equals(NfcAdapter.ACTION_NDEF_DISCOVERED)) {
+            Parcelable[] parcelables =
+                    intent.getParcelableArrayExtra(
+                            NfcAdapter.EXTRA_NDEF_MESSAGES);
+            NdefMessage inNdefMessage = (NdefMessage) parcelables[0];
+            NdefRecord[] inNdefRecords = inNdefMessage.getRecords();
+            NdefRecord NdefRecord_0 = inNdefRecords[0];
+            String inMsg = new String(NdefRecord_0.getPayload());
+            Toast.makeText(this, getString(R.string.received_hunt_message), Toast.LENGTH_LONG).show();
+            HuntDataAdapter hda = new HuntDataAdapter(this);
+            hda.open();
+            hda.executeStatement(inMsg);
+            hda.close();
+        }
     }
     @Override
     protected void onPause() {
         super.onPause();
-        unregisterReceiver(mReceiver);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        setIntent(intent);
     }
 
     @Override
@@ -126,114 +133,31 @@ public class ShareHuntsActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
-    public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
 
-        private WifiP2pManager mManager;
-        private WifiP2pManager.Channel mChannel;
-        private ShareHuntsActivity mActivity;
-        //WifiP2pManager.PeerListListener myPeerListListener;
-        private List<WifiP2pDevice> peer = new ArrayList<WifiP2pDevice>();
-
-        public WifiDirectBroadcastReceiver(WifiP2pManager manager, WifiP2pManager.Channel channel,
-                                           ShareHuntsActivity activity) {
-            super();
-            this.mManager = manager;
-            this.mChannel = channel;
-            this.mActivity = activity;
-//        myPeerListListener = new WifiP2pManager.PeerListListener() {
-//            @Override
-//            public void onPeersAvailable(WifiP2pDeviceList peers) {
-//
-//            }
-//        };
-        }
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-
-            if (WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION.equals(action)) {
-                int state = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1);
-                if (state == WifiP2pManager.WIFI_P2P_STATE_ENABLED) {
-                    // Wifi P2P is enabled
-                } else {
-                    // Wi-Fi P2P is not enabled
-                }
-            }
-            else if (WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION.equals(action)) {
-                // Call WifiP2pManager.requestPeers() to get a list of current peers
-                // request available peers from the wifi p2p manager. This is an
-                // asynchronous call and the calling activity is notified with a
-                // callback on PeerListListener.onPeersAvailable()
-                if (mManager != null) {
-                    mManager.requestPeers(mChannel, new WifiP2pManager.PeerListListener() {
-                        @Override
-                        public void onPeersAvailable(WifiP2pDeviceList peers) {
-                            peer.clear();
-                            peer.addAll(peers.getDeviceList());
-
-                            // If an AdapterView is backed by this data, notify it
-                            // of the change.  For instance, if you have a ListView of available
-                            // peers, trigger an update.
-                            for(WifiP2pDevice wif: peer){
-                                Log.d("test",wif.toString());
-
-                            }
-                            if (peer.size() == 0) {
-                                Log.d("BARNESGL", "No devices found");
-                                return;
-                            }
-
-
-                        }
-                    });
-
-                }
-            }
-            else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
-                // Respond to new connection or disconnections
-            }
-            else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
-
-            }
-
-        }
-
-
-        public void connect() {
-            // Picking the first device found on the network.
-            WifiP2pDevice device = peer.get(0);
-
-            WifiP2pConfig config = new WifiP2pConfig();
-            config.deviceAddress = device.deviceAddress;
-            config.wps.setup = WpsInfo.PBC;
-
-            mManager.connect(mChannel, config, new WifiP2pManager.ActionListener() {
-
-                @Override
-                public void onSuccess() {
-                    // WiFiDirectBroadcastReceiver will notify us. Ignore for now.
-                }
-
-                @Override
-                public void onFailure(int reason) {
-                    Toast.makeText(ShareHuntsActivity.this, "Connect failed. Retry.",
-                            Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
+    @Override
+    public NdefMessage createNdefMessage(NfcEvent event) {
+        byte[] bytes = huntName.getBytes();
+        NdefRecord ndefRecordOut = new NdefRecord(NdefRecord.TNF_MIME_MEDIA, "text/plain".getBytes(), new byte[] {}, bytes);
+        NdefMessage nDefMessageOut = new NdefMessage(ndefRecordOut);
+        return nDefMessageOut;
     }
 
+    @Override
+    public void onNdefPushComplete(NfcEvent event) {
+        final String eventString = "Share Complete!";
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(ShareHuntsActivity.this, eventString, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
 }
