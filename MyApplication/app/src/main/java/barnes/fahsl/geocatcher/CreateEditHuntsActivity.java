@@ -156,7 +156,7 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 0, locationListener);
 
 
-        
+
 
         final FlatButton recordSound = (FlatButton)findViewById(R.id.recordSoundButton);
         //recordSound.setEnabled(false);
