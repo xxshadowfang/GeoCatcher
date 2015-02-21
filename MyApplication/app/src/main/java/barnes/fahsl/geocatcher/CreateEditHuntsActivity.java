@@ -163,10 +163,10 @@ public class CreateEditHuntsActivity extends ActionBarActivity {
         recordSound.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                recordSound.setVisibility(Button.INVISIBLE);
-                LinearLayout recLayout = (LinearLayout)findViewById(R.id.SoundLayout);
-                recLayout.addView(mRecordButton);
-                recLayout.addView(mPlayButton);
+//                recordSound.setVisibility(Button.INVISIBLE);
+//                LinearLayout recLayout = (LinearLayout)findViewById(R.id.SoundLayout);
+//                recLayout.addView(mRecordButton);
+//                recLayout.addView(mPlayButton);
 
             }
         });

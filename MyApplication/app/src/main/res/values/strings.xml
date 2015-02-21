@@ -61,4 +61,7 @@
     <string name="no_hunts_message">No Hunts</string>
     <string name="hold_devices_message">Hold your devices back-to-back to activate NFC sharing.</string>
     <string name="received_hunt_message">"Received a Hunt!"</string>
+    <string name="they_have_no_hunts">They have no hunts!</string>
+    <string name="you_need_a_hunt">You need a hunt first.</string>
+    <string name="share_hunt_message_complete">Share Complete!</string>
 </resources>

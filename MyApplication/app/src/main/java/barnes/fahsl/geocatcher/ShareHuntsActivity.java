@@ -109,6 +109,9 @@ public class ShareHuntsActivity extends ActionBarActivity implements NfcAdapter.
             NdefRecord[] inNdefRecords = inNdefMessage.getRecords();
             NdefRecord NdefRecord_0 = inNdefRecords[0];
             String inMsg = new String(NdefRecord_0.getPayload());
+            if (inMsg.equals(";;;")) {
+                Toast.makeText(this, getString(R.string.they_have_no_hunts), Toast.LENGTH_SHORT).show();
+            }
             Toast.makeText(this, getString(R.string.received_hunt_message), Toast.LENGTH_LONG).show();
             Log.d("FAHSL", inMsg);
             hda.executeStatements(inMsg);
@@ -146,6 +149,10 @@ public class ShareHuntsActivity extends ActionBarActivity implements NfcAdapter.
     @Override
     public NdefMessage createNdefMessage(NfcEvent event) {
         byte[] bytes = hda.generateStringForHunt(huntName).getBytes();
+        if (huntName.equals(getString(R.string.no_hunts_message))) {
+            Toast.makeText(this, getString(R.string.you_need_a_hunt), Toast.LENGTH_SHORT).show();
+            bytes = ";;;".getBytes();
+        }
         NdefRecord ndefRecordOut = new NdefRecord(NdefRecord.TNF_MIME_MEDIA, "text/plain".getBytes(), new byte[] {}, bytes);
         NdefMessage nDefMessageOut = new NdefMessage(ndefRecordOut);
         return nDefMessageOut;
@@ -153,7 +160,7 @@ public class ShareHuntsActivity extends ActionBarActivity implements NfcAdapter.
 
     @Override
     public void onNdefPushComplete(NfcEvent event) {
-        final String eventString = "Share Complete!";
+        final String eventString = getString(R.string.share_hunt_message_complete);
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
