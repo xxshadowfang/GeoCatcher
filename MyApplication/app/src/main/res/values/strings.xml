@@ -57,4 +57,5 @@
     <string name="edit_hunt">Edit Hunt</string>
     <string name="update_location">Update Your Location</string>
     <string name="successful_location">Successfully Recorded Location</string>
+    <string name="play_sound_button_text">Play recording</string>
 </resources>
